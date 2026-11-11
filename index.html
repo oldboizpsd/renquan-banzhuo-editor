@@ -369,7 +369,6 @@ a{color:#E8457C}a:hover{color:#C24030}
               <div style="position:absolute;left:330px;top:300px;width:460px;height:220px;transform:rotate(-2deg) scale(.5);transform-origin:0 0"><dc-import name="Mockup" kind="towel-folded" hint-size="460px,220px"></dc-import></div>
               <div style="position:absolute;left:556px;top:364px;width:640px;height:110px;transform:rotate(-5deg) scale(.4);transform-origin:0 0"><dc-import name="Mockup" kind="pen-main" hint-size="640px,110px"></dc-import></div>
               <div style="position:absolute;left:784px;top:258px;width:104px;height:104px;border-radius:50%;background:#fff;border:3px solid #F2C14E;box-shadow:0 10px 14px -6px rgba(60,40,20,.45);transform:rotate(-8deg);display:flex;align-items:center;justify-content:center"><img src="assets/badge10.webp" alt="10 週年徽章" style="width:82px;height:82px;object-fit:contain"></div>
-              <div style="position:absolute;left:836px;top:356px;width:112px;height:74px;transform:rotate(5deg);border:2.5px dashed #363A37;border-radius:6px;background:rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;line-height:1.3"><span style="font-family:Huninn;font-size:16px">明信片</span><span style="color:#5E5357">待提供</span></div>
             </sc-if>
             <sc-if value="{{ d08.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d08.img }}" alt="替換商品圖" style="position:absolute;left:300px;top:110px;width:470px;height:330px;object-fit:contain"></sc-if>
             <div style="position:absolute;left:52px;top:40px;display:flex;flex-direction:column;align-items:flex-start;gap:12px">
@@ -462,10 +461,6 @@ a{color:#E8457C}a:hover{color:#C24030}
                 <span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ c.nameSize }}px;line-height:1.1">{{ c.name }}</span>
               </div>
               <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px"><span style="font-family:Huninn;font-size:22px">支持金額</span><span style="font-size:22px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:58px;line-height:1;color:#E8457C">{{ c.priceFmt }}</span></div>
-              <div style="margin-top:12px;padding:10px 16px;border-radius:14px;background:#fff;border:2px solid #363A37;display:flex;flex-direction:column;gap:2px">
-                <span style="font-family:Huninn;font-size:18px;color:#E8457C">參與意義</span>
-                <span style="font-size:20px;line-height:1.5;color:{{ c.meaningColor }}">{{ c.meaning }}</span>
-              </div>
               <div style="margin-top:auto;padding:12px 16px;border-radius:14px;background:#E69DBA;display:flex;flex-direction:column;gap:8px">
                 <span style="font-family:Huninn;font-size:20px;color:#fff">回饋內容</span>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
@@ -473,9 +468,9 @@ a{color:#E8457C}a:hover{color:#C24030}
                     <span style="display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:19px;background:#fff;font-size:20px;font-weight:500">{{ it }}</span>
                   </sc-for>
                 </div>
-                <div style="display:flex;gap:6px;align-items:center">
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
                   <sc-for list="{{ merchTiles }}" as="mt" hint-placeholder-count="8">
-                    <span style="width:52px;height:52px;flex:none;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="{{ mt.src }}" alt="{{ mt.alt }}" style="max-width:46px;max-height:46px;object-fit:contain"></span>
+                    <span style="height:70px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="{{ mt.src }}" alt="{{ mt.alt }}" style="max-width:92px;max-height:58px;object-fit:contain"></span>
                   </sc-for>
                 </div>
               </div>
@@ -511,9 +506,7 @@ a{color:#E8457C}a:hover{color:#C24030}
         <sc-if value="{{ showItems }}" hint-placeholder-val="{{ false }}">
           <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>{{ itemsLabel }}（以、分隔）</span><input value="{{ a.items }}" onChange="{{ on.items }}" maxLength="{{ lim.items }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%"></label>
         </sc-if>
-        <sc-if value="{{ isC }}" hint-placeholder-val="{{ false }}">
-          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>參與意義（上限 {{ lim.meaning }} 字）</span><textarea onChange="{{ on.meaning }}" maxLength="{{ lim.meaning }}" rows="3" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;resize:vertical" value="{{ a.meaning }}"></textarea></label>
-        </sc-if>
+        
         <div style="display:flex;flex-direction:column;gap:6px">
           <div style="font-size:12px;color:#7A6E72">背景色（主視覺色票）</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px">
@@ -651,10 +644,10 @@ a{color:#E8457C}a:hover{color:#C24030}
             <div style="position:relative;aspect-ratio:1000/563;border:2px solid #363A37;border-radius:6px;background:#FAF1F3;overflow:hidden">
               <div style="position:absolute;left:5.2%;top:8%;width:36%;bottom:8%;border:2px dashed #363A37;border-radius:50% 50% 8px 8px;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff">聯名書封<br>（拱形底）</div>
               <div style="position:absolute;left:46%;top:8%;right:5.2%;height:20%;background:#363A37;color:#fff;border-radius:4px;font-size:12px;display:flex;align-items:center;padding:0 8px">方案名稱＋支持金額</div>
-              <div style="position:absolute;left:46%;top:33%;right:5.2%;height:26%;background:#fff;border-radius:4px;font-size:12px;padding:6px 8px">參與意義（團隊撰寫）</div>
+              <div style="position:absolute;left:46%;top:33%;right:5.2%;height:26%;background:#fff;border-radius:4px;font-size:12px;padding:6px 8px">支持金額</div>
               <div style="position:absolute;left:46%;top:64%;right:5.2%;bottom:8%;background:#E69DBA;border-radius:4px;font-size:12px;padding:6px 8px">回饋內容＋所有募資品</div>
             </div>
-            <div style="font-size:14px;line-height:1.7"><b>版型 C｜聯名／特別支持（方向）</b>：3,000／5,000 元方案以聯名作者的書封為主角，放在粉色拱形上，底色收斂成淡粉白，減少裝飾，讓書、參與意義與回饋內容並重。參與意義由團隊撰寫後填入。</div>
+            <div style="font-size:14px;line-height:1.7"><b>版型 C｜聯名／特別支持（方向）</b>：3,000／5,000 元方案以聯名作者的書封為主角，放在粉色拱形上，底色收斂成淡粉白，減少裝飾，讓書與回饋內容（含全套募資品圖示）並重。</div>
           </div>
         </div>
       </div>
@@ -743,7 +736,7 @@ a{color:#E8457C}a:hover{color:#C24030}
             </sc-for>
           </div>
         </div>
-        <div style="font-size:14px;line-height:1.8;max-width:860px">目前 15 張商品介紹圖皆已有版型：單品 6 張（電子謝卡除外）、組合 3 張、聯名／特別支持 6 張。仍待補：電子謝卡素材、明信片、透明貼紙、NT$ 999 組合名稱、NT$ 5,000 方案名稱與同桌共食形式、各聯名方案的參與意義文案與書籍回饋形式、徽章是否為新提供的圓形標誌。原子筆與轉印貼以組合內容出現，不另出單品圖。</div>
+        <div style="font-size:14px;line-height:1.8;max-width:860px">目前 16 張商品介紹圖皆已完成版型：單品 7 張（含電子謝卡）、組合 3 張、聯名／特別支持 6 張。仍待確認：NT$ 999 組合名稱、NT$ 5,000 方案名稱與同桌共食形式、書籍回饋形式。原子筆與轉印貼以組合內容出現，不另出單品圖。</div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:12px">
@@ -774,13 +767,13 @@ const DEFAULTS = {
   D06: { code: 'A05', file: 'HRPT26_A05_Socks_V01', cat: '襪子', name: '襪！人權之路', sub: '人權辦桌中筒襪', price: '250', sizeLabel: '規格', size: '144 針薄平面中統襪', material: '', matLabel: '', bg: '#F6DDE6', decor: true, aux: true, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '改由「中筒襪-人權辦桌.ai」重新輸出側面圖，修正先前偏紫的顏色；製作註記已去除。規格依〈示意圖文字說明與進度〉，設計仍在確認中。' },
   D07: { code: 'A06', file: 'HRPT26_A06_Streamer_Draft_V01', cat: '飛行飄帶', name: '一眼就是好夥「辦」', sub: '人權辦桌飛行飄帶', price: '200', sizeLabel: '尺寸', size: '3 × 14 cm', material: '', matLabel: '', bg: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '改用最新飄帶示意圖（正面「人生而自由且平等」、背面「人權辦桌」，含銀色鑰匙圈），依去年樣式橫放，顏色依原稿。' },
   D10: { code: 'A07', file: 'HRPT26_A07_ECard_V01', cat: '電子謝卡', name: '純粹相挺', sub: '人權辦桌電子謝卡', price: '100', sizeLabel: '形式', size: '電子謝卡', material: '', matLabel: '', bg: '#F6DDE6', decor: true, aux: false, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '方案名稱「純粹相挺（電子謝卡）」，只放在募資網頁。謝卡畫面為設計示意（標準字、自拍生哥與炒菜學長、感謝文字），尺寸比照其他商品介紹圖 1000 × 563。' },
-  D08: { code: 'B02', file: 'HRPT26_B02_Bundle_Draft_V01', cat: '組合方案', name: '從頭辦到腳', price: '1950', items: '全部都要大禮包、10週年徽章、明信片', bg: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜大禮包內容、明信片待提供', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '組合名稱、價格依報價表。徽章改為 10 週年蛋糕徽章；畫面以 T-shirt 綠款、方巾、襪子、毛巾、原子筆代表大禮包，明信片仍為占位框。' },
+  D08: { code: 'B02', file: 'HRPT26_B02_Bundle_Draft_V01', cat: '組合方案', name: '從頭辦到腳', price: '1950', items: '全部都要大禮包、10週年徽章、明信片', bg: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜大禮包內容、明信片待提供', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '組合名稱、價格依報價表。徽章改為 10 週年蛋糕徽章；畫面以 T-shirt 綠款、方巾、襪子、毛巾、原子筆代表大禮包，明信片不放圖，只列在組合內容。' },
   D09: { code: 'B03', file: 'HRPT26_B03_Bundle_Draft_V01', cat: '組合方案', name: '組合名稱待定', price: '999', items: '毛巾、飄帶、轉印貼組、方巾、透明貼紙', bg: '#F6DDE6', decor: true, aux: false, stamp: false, stampText: '版型示意｜組合名稱、透明貼紙待提供', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '內容與價格依報價表，組合名稱未定。轉印貼（10 × 6.8 cm）、飄帶、毛巾、方巾皆改用最新圖檔；透明貼紙無素材，畫面不放圖，只列在組合內容。' },
-  C01: { code: 'C01', file: 'HRPT26_C01_Awu_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '利格拉樂・阿𡠄 × 人權辦桌', subImg: 'assets/name_awu.webp', subImgAlt: '利格拉樂・阿𡠄', subRest: '× 人權辦桌', price: '3000', items: '《隱隱微光》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_awu.webp', bookAlt: '《隱隱微光》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：阿鄔＋所有募資品＊1。書封為新提供的《隱隱微光》（利格拉樂・阿𡠄著）。書是否為回饋品（如簽名書）待確認；參與意義由團隊撰寫。' },
-  C02: { code: 'C02', file: 'HRPT26_C02_Wanyao_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '周婉窈 × 人權辦桌', price: '3000', items: '《少年臺灣史》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_wanyao.webp', bookAlt: '《少年臺灣史》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：婉窈＋所有募資品＊1。書封為新提供的《少年臺灣史》（2019 增訂版，周婉窈著）。書是否為回饋品待確認。' },
-  C03: { code: 'C03', file: 'HRPT26_C03_ChenLie_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳列 × 人權辦桌', price: '3000', items: '《殘骸書》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenlie.webp', bookAlt: '《殘骸書》書封', bg: '#FAF1F3', arch: '#E69DBA', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳列＋所有募資品＊1。書封為新提供的《殘骸書》（陳列著）。白色書封放在深一階的粉色拱形上以保持輪廓。' },
-  C04: { code: 'C04', file: 'HRPT26_C04_ChenQinsheng_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳欽生 × 人權辦桌', price: '3000', items: '《謊言真相》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenqinsheng.webp', bookAlt: '《謊言 真相：陳欽生生命故事》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳欽生＋所有募資品＊1。書封為新提供的《謊言 真相：陳欽生生命故事》。' },
-  C05: { code: 'C05', file: 'HRPT26_C05_HuangKexian_Draft_V01', cat: '特別支持方案', name: '看見街頭的暗組合', sub: '黃克先 × 人權辦桌', price: '3000', items: '《危殆生活》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_huang.webp', bookAlt: '《危殆生活》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：黃克先＋所有募資品＊1。書封為新提供的《危殆生活》（黃克先著）。' },
+  C01: { code: 'C01', file: 'HRPT26_C01_Awu_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '利格拉樂・阿𡠄 × 人權辦桌', subImg: 'assets/name_awu.webp', subImgAlt: '利格拉樂・阿𡠄', subRest: '× 人權辦桌', price: '3000', items: '《隱隱微光》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_awu.webp', bookAlt: '《隱隱微光》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：阿鄔＋所有募資品＊1。書封為新提供的《隱隱微光》（利格拉樂・阿𡠄著）。書是否為回饋品（如簽名書）待確認。' },
+  C02: { code: 'C02', file: 'HRPT26_C02_Wanyao_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '周婉窈 × 人權辦桌', price: '3000', items: '《少年臺灣史》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_wanyao.webp', bookAlt: '《少年臺灣史》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：婉窈＋所有募資品＊1。書封為新提供的《少年臺灣史》（2019 增訂版，周婉窈著）。書是否為回饋品待確認。' },
+  C03: { code: 'C03', file: 'HRPT26_C03_ChenLie_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳列 × 人權辦桌', price: '3000', items: '《殘骸書》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenlie.webp', bookAlt: '《殘骸書》書封', bg: '#FAF1F3', arch: '#E69DBA', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳列＋所有募資品＊1。書封為新提供的《殘骸書》（陳列著）。白色書封放在深一階的粉色拱形上以保持輪廓。' },
+  C04: { code: 'C04', file: 'HRPT26_C04_ChenQinsheng_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳欽生 × 人權辦桌', price: '3000', items: '《謊言真相》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenqinsheng.webp', bookAlt: '《謊言 真相：陳欽生生命故事》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳欽生＋所有募資品＊1。書封為新提供的《謊言 真相：陳欽生生命故事》。' },
+  C05: { code: 'C05', file: 'HRPT26_C05_HuangKexian_Draft_V01', cat: '特別支持方案', name: '看見街頭的暗組合', sub: '黃克先 × 人權辦桌', price: '3000', items: '《危殆生活》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_huang.webp', bookAlt: '《危殆生活》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：黃克先＋所有募資品＊1。書封為新提供的《危殆生活》（黃克先著）。' },
   C06: { code: 'C06', file: 'HRPT26_C06_Table_Draft_V01', cat: '特別支持方案', name: '方案名稱待定', sub: '同桌共食', price: '5000', items: '同桌共食、全套募資品 ×1', meaning: '（待團隊撰寫）', book: '', bookAlt: '', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜方案名稱、同桌共食形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：（未命名）同桌共食＋所有募資品＊1，NT$ 5,000。無人物或書籍，左側以辦桌餐桌示意。' }
 };
 const TEE_SIZES = [
