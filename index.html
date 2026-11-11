@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>人權辦桌｜募資商品製圖修改器</title>
+<script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js":"vendor/react.production.min.js","https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js":"vendor/react-dom.production.min.js"};</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preload" href="fonts/MantouSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jf-openhuninn-2.1.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Mantou Sans';src:url(fonts/MantouSans-Regular.woff2) format('woff2');font-weight:400;font-display:block}
+@font-face{font-family:'Huninn';src:url(fonts/jf-openhuninn-2.1.woff2) format('woff2');font-weight:400;font-display:block}
+@font-face{font-family:'Noto Sans TC';src:url(fonts/NotoSansTC-VariableFont_wght.woff2) format('woff2-variations'),url(fonts/NotoSansTC-VariableFont_wght.woff2) format('woff2');font-weight:400 700;font-display:swap}
+html{overflow-y:scroll}body{margin:0;background:#FBF4F1;color:#363A37;font-family:'Noto Sans TC',sans-serif}
+a{color:#E8457C}a:hover{color:#C24030}
+</style>
+<script src="vendor/html-to-image.js"></script>
+</helmet>
+<div style="min-height:100vh;background:#FBF4F1;color:#363A37;font-family:'Noto Sans TC',sans-serif">
+  <header style="position:sticky;top:0;z-index:20;background:#FBF4F1;border-bottom:2px solid #363A37">
+    <div style="max-width:1320px;margin:0 auto;padding:14px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px">
+      <div style="display:flex;align-items:center;gap:14px;min-width:0">
+        <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="height:30px;width:auto">
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:Huninn;font-size:18px;line-height:1.2">2026 第十一屆｜嘖嘖募資商品視覺審稿</div>
+          <div style="font-size:12px;color:#7A6E72">第一階段 V01・團隊審稿版本，非正式上線版本</div>
+        </div>
+      </div>
+      <nav style="display:flex;flex-wrap:wrap;gap:6px;margin-left:auto">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.go }}" style="font-family:Huninn;font-size:15px;padding:8px 16px;border-radius:999px;border:2px solid #363A37;background:{{ t.bg }};color:{{ t.fg }};cursor:pointer">{{ t.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;font-size:12px;width:100%">
+        <span style="padding:3px 10px;border-radius:999px;background:{{ fontChip.mantouBg }};color:#fff">饅頭黑體 {{ fontChip.mantou }}</span>
+        <span style="padding:3px 10px;border-radius:999px;background:{{ fontChip.huninnBg }};color:#fff">jf open 粉圓 {{ fontChip.huninn }}</span>
+        <span style="padding:3px 10px;border-radius:999px;background:{{ fontChip.notoBg }};color:#fff">思源黑體 TC {{ fontChip.noto }}</span>
+        <span style="padding:3px 10px;border-radius:999px;background:#fff;border:1px solid #D9CCD0">饅頭黑體缺字檢查：{{ missingText }}</span>
+        <sc-if value="{{ busyOn }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;background:#363A37;color:#fff">匯出中：{{ busy }}</span></sc-if>
+        <sc-if value="{{ errOn }}" hint-placeholder-val="{{ false }}"><span style="padding:3px 10px;border-radius:999px;background:#C24030;color:#fff">{{ err }}</span></sc-if>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1320px;margin:0 auto;padding:28px 24px 80px">
+
+  <sc-if value="{{ tabCards }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="商品介紹圖" style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+      <div ref="{{ colRef }}" style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <sc-for list="{{ cardTabs }}" as="c" hint-placeholder-count="4">
+            <button onClick="{{ c.go }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 14px;border-radius:12px;border:2px solid #363A37;background:{{ c.bg }};color:{{ c.fg }};cursor:pointer;text-align:left">
+              <span style="font-family:Huninn;font-size:15px">{{ c.code }}｜{{ c.name }}</span>
+              <span style="font-size:11px;opacity:.8">{{ c.status }}</span>
+            </button>
+          </sc-for>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button onClick="{{ toggleAll }}" style="font-size:13px;padding:8px 12px;border-radius:10px;border:2px solid #363A37;background:{{ allBtn.bg }};color:{{ allBtn.fg }};cursor:pointer">全部並排</button>
+            <button onClick="{{ toggleMobile }}" style="font-size:13px;padding:8px 12px;border-radius:10px;border:2px solid #363A37;background:{{ mobBtn.bg }};color:{{ mobBtn.fg }};cursor:pointer">手機縮小預覽</button>
+          </div>
+        </div>
+        <sc-if value="{{ mobileOn }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;color:#7A6E72">以 343 px 寬模擬手機版頁面內文寬度（示意），檢查名稱、價格與規格縮小後是否可讀。</div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:20px">
+
+          <sc-if value="{{ show.D01 }}" hint-placeholder-val="{{ true }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D01" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d01.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d01.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair1.webp" alt="" style="position:absolute;left:34px;top:440px;width:70px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d01.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d01.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:74px;top:62px;width:440px;height:440px"><dc-import name="Mockup" kind="bandana-flat" hint-size="440px,440px"></dc-import></div>
+                <sc-if value="{{ d01.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:398px;top:356px;width:300px;height:300px;transform:scale(.52);transform-origin:0 0"><dc-import name="Mockup" kind="bandana-folded" hint-size="300px,300px"></dc-import></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ d01.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:76px;top:64px;width:300px;height:300px;transform:scale(1.45);transform-origin:0 0"><dc-import name="Mockup" kind="bandana-folded" hint-size="300px,300px"></dc-import></div>
+                <sc-if value="{{ d01.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:400px;top:362px;width:440px;height:440px;transform:scale(.36);transform-origin:0 0"><dc-import name="Mockup" kind="bandana-flat" hint-size="440px,440px"></dc-import></div></sc-if>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d01.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d01.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d01.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d01.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d01.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d01.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d01.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d01.sizeColor }}">{{ d01.size }}</span></div>
+                <sc-if value="{{ d01.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d01.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d01.matColor }}">{{ d01.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d01.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d01.stamp }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d01.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D02 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D02" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d02.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d02.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair2.webp" alt="" style="position:absolute;left:470px;top:430px;width:72px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d02.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d02.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:16px;top:150px;width:600px;height:240px;transform:scale(.92);transform-origin:0 0"><dc-import name="Mockup" kind="towel-flat" hint-size="600px,240px"></dc-import></div>
+                <sc-if value="{{ d02.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:150px;top:382px;width:460px;height:220px;transform:scale(.56);transform-origin:0 0"><dc-import name="Mockup" kind="towel-folded" hint-size="460px,220px"></dc-import></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ d02.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:26px;top:130px;width:460px;height:220px;transform:scale(1.15);transform-origin:0 0"><dc-import name="Mockup" kind="towel-folded" hint-size="460px,220px"></dc-import></div>
+                <sc-if value="{{ d02.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:150px;top:396px;width:600px;height:240px;transform:scale(.45);transform-origin:0 0"><dc-import name="Mockup" kind="towel-flat" hint-size="600px,240px"></dc-import></div></sc-if>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d02.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d02.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d02.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d02.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d02.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d02.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d02.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d02.sizeColor }}">{{ d02.size }}</span></div>
+                <sc-if value="{{ d02.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d02.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d02.matColor }}">{{ d02.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d02.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d02.stamp }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d02.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D03 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D03" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d03.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d03.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair1.webp" alt="" style="position:absolute;left:40px;top:446px;width:62px;height:auto">
+              <img src="assets/t/chair2.webp" alt="" style="position:absolute;left:98px;top:456px;width:62px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d03.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d03.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:40px;top:126px;width:640px;height:260px;transform:rotate(-6deg) scale(.76);transform-origin:0 0"><dc-import name="Mockup" kind="pens-trio" hint-size="640px,260px"></dc-import></div>
+                <sc-if value="{{ d03.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:250px;top:370px;width:520px;height:240px;transform:scale(.5);transform-origin:0 0"><dc-import name="Mockup" kind="pen-detail" hint-size="520px,240px"></dc-import></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ d03.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:44px;top:130px;width:520px;height:240px;transform:scale(.96);transform-origin:0 0"><dc-import name="Mockup" kind="pen-detail" hint-size="520px,240px"></dc-import></div>
+                <sc-if value="{{ d03.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:210px;top:410px;width:640px;height:110px;transform:scale(.45);transform-origin:0 0"><dc-import name="Mockup" kind="pen-main" hint-size="640px,110px"></dc-import></div></sc-if>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d03.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d03.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d03.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d03.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d03.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d03.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d03.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d03.sizeColor }}">{{ d03.size }}</span></div>
+                <sc-if value="{{ d03.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d03.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d03.matColor }}">{{ d03.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d03.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d03.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d03.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D04 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D04" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d04.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <sc-if value="{{ d04.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:180px;top:-20px;width:640px;height:auto">
+              <img src="assets/t/chef.webp" alt="" style="position:absolute;left:44px;top:196px;width:auto;height:170px">
+            </sc-if>
+            <img src="assets/t/front_table.webp" alt="" style="position:absolute;left:-200px;top:327px;width:1400px;height:auto">
+            <sc-if value="{{ d04.noCustom }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute;left:612px;top:252px;width:520px;height:300px;transform:rotate(-6deg) scale(.38);transform-origin:0 0"><dc-import name="Mockup" kind="streamer-pair" hint-size="520px,300px"></dc-import></div>
+              <div style="position:absolute;left:396px;top:128px;width:520px;height:440px;transform:rotate(-4deg) scale(.44);transform-origin:0 0"><dc-import name="Mockup" kind="socks-pair" hint-size="520px,440px"></dc-import></div>
+
+              <div style="position:absolute;left:396px;top:360px;width:640px;height:110px;transform:rotate(-4deg) scale(.62);transform-origin:0 0"><dc-import name="Mockup" kind="pen-main" hint-size="640px,110px"></dc-import></div>
+            </sc-if>
+            <sc-if value="{{ d04.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d04.img }}" alt="替換商品圖" style="position:absolute;left:300px;top:110px;width:470px;height:330px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:52px;top:40px;display:flex;flex-direction:column;align-items:flex-start;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:112px;height:auto">
+                <span style="display:inline-flex;align-items:center;height:32px;padding:0 14px;border:2px solid #363A37;border-radius:16px;background:#fff;font-family:Huninn;font-size:19px">{{ d04.cat }}</span>
+              </div>
+              <div style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d04.nameSize }}px;line-height:1.1">{{ d04.name }}</div>
+            </div>
+            <div style="position:absolute;right:52px;top:34px;width:200px;height:200px;border-radius:50%;background:#fff;border:3px solid #363A37;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 0 #E8457C">
+              <div style="position:absolute;inset:10px;border-radius:50%;border:2px dashed rgba(232,69,124,.5)"></div>
+              <span style="font-family:Huninn;font-size:20px">組合價</span>
+              <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:18px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d04.priceSize }}px;line-height:1;color:#E8457C">{{ d04.priceFmt }}</span></div>
+            </div>
+            <div style="position:absolute;left:52px;right:52px;bottom:36px;display:flex;align-items:center;flex-wrap:wrap;gap:10px">
+              <span style="font-family:Huninn;font-size:22px;color:#fff;margin-right:4px">組合內容</span>
+              <sc-for list="{{ d04.itemList }}" as="it" hint-placeholder-count="3">
+                <span style="display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:20px;background:#fff;font-size:22px;font-weight:500">{{ it }}</span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ d04.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;right:52px;top:446px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(4deg);background:#fff">{{ d04.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D05 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D05" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d05.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d05.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair2.webp" alt="" style="position:absolute;left:30px;top:446px;width:66px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d05.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d05.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:78px;top:50px;width:440px;height:460px;transform:scale(.98);transform-origin:0 0"><dc-import name="Mockup" kind="tee-green" hint-size="440px,460px"></dc-import></div>
+                <sc-if value="{{ d05.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:404px;top:318px;width:440px;height:460px;transform:rotate(6deg) scale(.4);transform-origin:0 0"><dc-import name="Mockup" kind="tee-back" hint-size="440px,460px"></dc-import></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ d05.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:78px;top:50px;width:440px;height:460px;transform:scale(.98);transform-origin:0 0"><dc-import name="Mockup" kind="tee-back" hint-size="440px,460px"></dc-import></div>
+                <sc-if value="{{ d05.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:404px;top:318px;width:440px;height:460px;transform:rotate(6deg) scale(.4);transform-origin:0 0"><dc-import name="Mockup" kind="tee-green" hint-size="440px,460px"></dc-import></div></sc-if>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d05.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d05.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:38px;width:356px;height:487px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:120px;height:auto;align-self:flex-start">
+              <div style="margin-top:12px;display:flex;gap:8px;align-items:center"><span style="display:inline-flex;align-items:center;height:32px;padding:0 14px;border:2px solid #363A37;border-radius:16px;background:#fff;font-family:Huninn;font-size:19px">{{ d05.cat }}</span><span style="font-family:Huninn;font-size:20px;color:#E8457C">{{ d05.sub }}</span></div>
+              <div style="margin-top:8px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d05.nameSize }}px;line-height:1.1">{{ d05.name }}</div>
+              <div style="margin-top:10px;border:2px solid #363A37;border-radius:10px;overflow:hidden;background:#fff">
+                <div style="display:grid;grid-template-columns:52px repeat(4,1fr) 78px;background:#363A37;color:#fff;font-family:Huninn;font-size:15px;text-align:center;line-height:28px"><span>尺碼</span><span>衣長</span><span>胸寬</span><span>肩寬</span><span>袖長</span><span>建議身高</span></div>
+                <sc-for list="{{ teeSizes }}" as="r" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:52px repeat(4,1fr) 78px;font-size:16px;font-weight:500;text-align:center;line-height:26px;border-top:1px solid #E3D3D8"><span style="font-weight:700">{{ r.s }}</span><span>{{ r.a }}</span><span>{{ r.b }}</span><span>{{ r.c }}</span><span>{{ r.d }}</span><span>{{ r.h }}</span></div>
+                </sc-for>
+              </div>
+              <div style="margin-top:4px;font-size:13px;color:#5E5357">單位 cm｜{{ d05.size }}</div>
+              <div style="margin-top:auto;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:76px;line-height:.95;color:#E8457C">{{ d05.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d05.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d05.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D06 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D06" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d06.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d06.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair1.webp" alt="" style="position:absolute;left:34px;top:440px;width:70px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d06.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d06.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:66px;top:84px;width:520px;height:440px;transform:scale(.86);transform-origin:0 0"><dc-import name="Mockup" kind="socks-pair" hint-size="520px,440px"></dc-import></div>
+                <sc-if value="{{ d06.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:478px;top:150px;width:132px;height:550px;transform:rotate(8deg) scale(.58);transform-origin:0 0"><dc-import name="Mockup" kind="socks" hint-size="132px,550px"></dc-import></div></sc-if>
+              </sc-if>
+              <sc-if value="{{ d06.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:150px;top:54px;width:260px;height:440px;transform:rotate(-6deg) scale(1.02);transform-origin:50% 50%"><dc-import name="Mockup" kind="sock-single" hint-size="260px,440px"></dc-import></div>
+                <sc-if value="{{ d06.aux }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:356px;top:330px;width:520px;height:440px;transform:scale(.36);transform-origin:0 0"><dc-import name="Mockup" kind="socks-pair" hint-size="520px,440px"></dc-import></div></sc-if>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d06.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d06.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d06.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d06.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d06.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d06.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d06.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d06.sizeColor }}">{{ d06.size }}</span></div>
+                <sc-if value="{{ d06.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d06.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d06.matColor }}">{{ d06.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d06.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d06.stamp }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d06.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D07 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D07" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d07.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d07.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair1.webp" alt="" style="position:absolute;left:40px;top:446px;width:62px;height:auto">
+              <img src="assets/t/chair2.webp" alt="" style="position:absolute;left:98px;top:456px;width:62px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d07.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d07.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:46px;top:132px;width:520px;height:300px;transform:rotate(-4deg) scale(.92);transform-origin:0 0"><dc-import name="Mockup" kind="streamer-pair" hint-size="520px,300px"></dc-import></div>
+              </sc-if>
+              <sc-if value="{{ d07.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:44px;top:236px;width:520px;height:150px;transform:rotate(-6deg) scale(.92);transform-origin:0 0"><dc-import name="Mockup" kind="streamer-single" hint-size="520px,150px"></dc-import></div>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d07.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d07.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d07.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d07.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d07.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d07.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d07.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d07.sizeColor }}">{{ d07.size }}</span></div>
+                <sc-if value="{{ d07.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d07.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d07.matColor }}">{{ d07.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d07.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d07.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d07.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D10 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D10" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d10.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:60px;top:48px;width:468px;height:468px;border-radius:50%;background-image:url(assets/png/bg.webp);background-size:cover;background-position:center"></div>
+            <sc-if value="{{ d10.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:0;top:-14px;width:600px;height:auto">
+              <img src="assets/t/chair1.webp" alt="" style="position:absolute;left:40px;top:446px;width:62px;height:auto">
+              <img src="assets/t/chair2.webp" alt="" style="position:absolute;left:98px;top:456px;width:62px;height:auto">
+            </sc-if>
+            <sc-if value="{{ d10.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ d10.isMain }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;left:74px;top:56px;width:440px;height:450px;transform:scale(1);transform-origin:0 0"><dc-import name="Mockup" kind="ecard" hint-size="440px,450px"></dc-import></div>
+              </sc-if>
+              <sc-if value="{{ d10.isAlt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;left:64px;top:110px;width:460px;height:330px;transform:rotate(-4deg);transform-origin:50% 50%"><dc-import name="Mockup" kind="ecard-card" hint-size="460px,330px"></dc-import></div>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ d10.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d10.img }}" alt="替換商品圖" style="position:absolute;left:44px;top:40px;width:500px;height:483px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:592px;top:44px;width:356px;height:475px;display:flex;flex-direction:column">
+              <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:128px;height:auto;align-self:flex-start">
+              <div style="margin-top:20px;display:flex"><span style="display:inline-flex;align-items:center;height:34px;padding:0 16px;border:2px solid #363A37;border-radius:17px;background:#fff;font-family:Huninn;font-size:20px">{{ d10.cat }}</span></div>
+              <div style="margin-top:14px;font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d10.nameSize }}px;line-height:1.12;text-wrap:balance">{{ d10.name }}</div>
+              <div style="margin-top:10px;font-family:Huninn;font-size:28px;line-height:1.3;color:#E8457C">{{ d10.sub }}</div>
+              <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:2px dashed rgba(54,58,55,.3)">
+                <div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d10.sizeLabel }}</span><span style="font-size:22px;font-weight:500;line-height:1.3;color:{{ d10.sizeColor }}">{{ d10.size }}</span></div>
+                <sc-if value="{{ d10.hasMat }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:14px;align-items:baseline"><span style="font-family:Huninn;font-size:22px;width:50px;flex:none">{{ d10.matLabel }}</span><span style="font-size:22px;font-weight:500;color:{{ d10.matColor }}">{{ d10.material }}</span></div></sc-if>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px"><span style="font-size:26px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:84px;line-height:.95;color:#E8457C">{{ d10.priceFmt }}</span></div>
+            </div>
+            <sc-if value="{{ d10.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:36px;top:30px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ d10.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D08 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D08" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d08.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <sc-if value="{{ d08.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:180px;top:-20px;width:640px;height:auto">
+              <img src="assets/t/selfie.webp" alt="" style="position:absolute;left:40px;top:186px;width:auto;height:176px">
+            </sc-if>
+            <img src="assets/t/front_table.webp" alt="" style="position:absolute;left:-200px;top:327px;width:1400px;height:auto">
+            <sc-if value="{{ d08.noCustom }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute;left:250px;top:104px;width:440px;height:460px;transform:rotate(-4deg) scale(.52);transform-origin:0 0"><dc-import name="Mockup" kind="tee-pink" hint-size="440px,460px"></dc-import></div>
+              <div style="position:absolute;left:452px;top:178px;width:300px;height:300px;transform:scale(.5);transform-origin:0 0"><dc-import name="Mockup" kind="bandana-folded" hint-size="300px,300px"></dc-import></div>
+              <div style="position:absolute;left:592px;top:236px;width:520px;height:440px;transform:scale(.3);transform-origin:0 0"><dc-import name="Mockup" kind="socks-pair" hint-size="520px,440px"></dc-import></div>
+              <div style="position:absolute;left:330px;top:300px;width:460px;height:220px;transform:rotate(-2deg) scale(.5);transform-origin:0 0"><dc-import name="Mockup" kind="towel-folded" hint-size="460px,220px"></dc-import></div>
+              <div style="position:absolute;left:556px;top:364px;width:640px;height:110px;transform:rotate(-5deg) scale(.4);transform-origin:0 0"><dc-import name="Mockup" kind="pen-main" hint-size="640px,110px"></dc-import></div>
+              <div style="position:absolute;left:784px;top:258px;width:104px;height:104px;border-radius:50%;background:#fff;border:3px solid #F2C14E;box-shadow:0 10px 14px -6px rgba(60,40,20,.45);transform:rotate(-8deg);display:flex;align-items:center;justify-content:center"><img src="assets/badge10.webp" alt="10 週年徽章" style="width:82px;height:82px;object-fit:contain"></div>
+              <div style="position:absolute;left:836px;top:356px;width:112px;height:74px;transform:rotate(5deg);border:2.5px dashed #363A37;border-radius:6px;background:rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:13px;line-height:1.3"><span style="font-family:Huninn;font-size:16px">明信片</span><span style="color:#5E5357">待提供</span></div>
+            </sc-if>
+            <sc-if value="{{ d08.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d08.img }}" alt="替換商品圖" style="position:absolute;left:300px;top:110px;width:470px;height:330px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:52px;top:40px;display:flex;flex-direction:column;align-items:flex-start;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:112px;height:auto">
+                <span style="display:inline-flex;align-items:center;height:32px;padding:0 14px;border:2px solid #363A37;border-radius:16px;background:#fff;font-family:Huninn;font-size:19px">{{ d08.cat }}</span>
+              </div>
+              <div style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d08.nameSize }}px;line-height:1.1">{{ d08.name }}</div>
+            </div>
+            <div style="position:absolute;right:52px;top:34px;width:200px;height:200px;border-radius:50%;background:#fff;border:3px solid #363A37;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 0 #E8457C">
+              <div style="position:absolute;inset:10px;border-radius:50%;border:2px dashed rgba(232,69,124,.5)"></div>
+              <span style="font-family:Huninn;font-size:20px">組合價</span>
+              <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:18px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d08.priceSize }}px;line-height:1;color:#E8457C">{{ d08.priceFmt }}</span></div>
+            </div>
+            <div style="position:absolute;left:52px;right:52px;bottom:36px;display:flex;align-items:center;flex-wrap:wrap;gap:10px">
+              <span style="font-family:Huninn;font-size:22px;color:#fff;margin-right:4px">組合內容</span>
+              <sc-for list="{{ d08.itemList }}" as="it" hint-placeholder-count="3">
+                <span style="display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:20px;background:#fff;font-size:22px;font-weight:500">{{ it }}</span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ d08.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;right:52px;top:446px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(4deg);background:#fff">{{ d08.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-if value="{{ show.D09 }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="card-D09" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ d09.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <sc-if value="{{ d09.decor }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/t/ribbon.webp" alt="" style="position:absolute;left:180px;top:-20px;width:640px;height:auto">
+
+            </sc-if>
+            <img src="assets/t/front_table.webp" alt="" style="position:absolute;left:-200px;top:327px;width:1400px;height:auto">
+            <sc-if value="{{ d09.noCustom }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute;left:44px;top:182px;width:320px;height:460px;transform:rotate(-6deg) scale(.6);transform-origin:0 0"><dc-import name="Mockup" kind="sticker-sheet" hint-size="320px,460px"></dc-import></div>
+              <div style="position:absolute;left:262px;top:170px;width:600px;height:240px;transform:rotate(-3deg) scale(.62);transform-origin:0 0"><dc-import name="Mockup" kind="towel-flat" hint-size="600px,240px"></dc-import></div>
+              <div style="position:absolute;left:548px;top:226px;width:300px;height:300px;transform:rotate(4deg) scale(.56);transform-origin:0 0"><dc-import name="Mockup" kind="bandana-folded" hint-size="300px,300px"></dc-import></div>
+              <div style="position:absolute;left:706px;top:268px;width:520px;height:300px;transform:rotate(4deg) scale(.44);transform-origin:0 0"><dc-import name="Mockup" kind="streamer-pair" hint-size="520px,300px"></dc-import></div>
+            </sc-if>
+            <sc-if value="{{ d09.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ d09.img }}" alt="替換商品圖" style="position:absolute;left:300px;top:110px;width:470px;height:330px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:52px;top:40px;display:flex;flex-direction:column;align-items:flex-start;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:112px;height:auto">
+                <span style="display:inline-flex;align-items:center;height:32px;padding:0 14px;border:2px solid #363A37;border-radius:16px;background:#fff;font-family:Huninn;font-size:19px">{{ d09.cat }}</span>
+              </div>
+              <div style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d09.nameSize }}px;line-height:1.1">{{ d09.name }}</div>
+            </div>
+            <div style="position:absolute;right:52px;top:34px;width:200px;height:200px;border-radius:50%;background:#fff;border:3px solid #363A37;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 0 #E8457C">
+              <div style="position:absolute;inset:10px;border-radius:50%;border:2px dashed rgba(232,69,124,.5)"></div>
+              <span style="font-family:Huninn;font-size:20px">組合價</span>
+              <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:18px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ d09.priceSize }}px;line-height:1;color:#E8457C">{{ d09.priceFmt }}</span></div>
+            </div>
+            <div style="position:absolute;left:52px;right:52px;bottom:36px;display:flex;align-items:center;flex-wrap:wrap;gap:10px">
+              <span style="font-family:Huninn;font-size:22px;color:#fff;margin-right:4px">組合內容</span>
+              <sc-for list="{{ d09.itemList }}" as="it" hint-placeholder-count="5">
+                <span style="display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:20px;background:#fff;font-size:20px;font-weight:500">{{ it }}</span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ d09.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;right:52px;top:446px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(4deg);background:#fff">{{ d09.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+
+          <sc-for list="{{ cList }}" as="c" hint-placeholder-count="0">
+          <sc-if value="{{ c.show }}" hint-placeholder-val="{{ false }}">
+          <div style="width:{{ sc.w }}px;height:{{ sc.h }}px;position:relative;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px #D9CCD0">
+          <div style="position:absolute;left:0;top:0;width:1000px;height:563px;transform:scale({{ sc.s }});transform-origin:0 0">
+          <div id="{{ c.domId }}" style="position:relative;width:1000px;height:563px;overflow:hidden;background:{{ c.bg }};font-family:'Noto Sans TC',sans-serif;color:#363A37">
+            <div style="position:absolute;left:52px;top:44px;width:360px;height:475px;border-radius:180px 180px 18px 18px;background:{{ c.arch }};overflow:hidden">
+              <sc-if value="{{ c.decor }}" hint-placeholder-val="{{ true }}">
+                <img src="assets/t/chairs4.webp" alt="" style="position:absolute;left:20px;bottom:14px;width:320px;height:auto;opacity:.5">
+              </sc-if>
+            </div>
+            <sc-if value="{{ c.noCustom }}" hint-placeholder-val="{{ true }}">
+              <sc-if value="{{ c.hasBook }}" hint-placeholder-val="{{ true }}">
+                <img src="{{ c.book }}" alt="{{ c.bookAlt }}" style="position:absolute;left:82px;top:96px;width:300px;height:360px;object-fit:contain;filter:drop-shadow(0 18px 18px rgba(90,20,50,.3))">
+              </sc-if>
+              <sc-if value="{{ c.noBook }}" hint-placeholder-val="{{ false }}">
+                <img src="assets/t/banquet_table.webp" alt="" style="position:absolute;left:72px;top:190px;width:320px;height:auto">
+                <div style="position:absolute;left:112px;top:110px;width:240px;padding:10px 0;border:2.5px dashed #363A37;border-radius:14px;background:rgba(255,255,255,.85);text-align:center;font-family:Huninn;font-size:22px">同桌共食<br><span style="font-family:'Noto Sans TC',sans-serif;font-size:15px;color:#5E5357">形式與圖像待確認</span></div>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ c.hasCustom }}" hint-placeholder-val="{{ false }}"><img src="{{ c.img }}" alt="替換人物或書籍圖" style="position:absolute;left:72px;top:70px;width:320px;height:400px;object-fit:contain"></sc-if>
+            <div style="position:absolute;left:82px;top:470px;width:300px;display:flex;justify-content:center"><span style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 18px;border:2px solid #363A37;border-radius:18px;background:#fff;font-family:Huninn;font-size:20px"><sc-if value="{{ c.hasSubImg }}" hint-placeholder-val="{{ false }}"><img src="{{ c.subImg }}" alt="{{ c.subImgAlt }}" style="height:18px;width:auto;display:block"><span>{{ c.subRest }}</span></sc-if><sc-if value="{{ c.noSubImg }}" hint-placeholder-val="{{ true }}">{{ c.sub }}</sc-if></span></div>
+            <div style="position:absolute;left:452px;top:40px;width:496px;height:483px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:12px">
+                <img src="assets/t/logo_pink_warp.webp" alt="人權辦桌" style="width:104px;height:auto">
+                <span style="display:inline-flex;align-items:center;height:30px;padding:0 14px;border:2px solid #363A37;border-radius:15px;background:#fff;font-family:Huninn;font-size:18px">{{ c.cat }}</span>
+              </div>
+              <div style="margin-top:12px;display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+                <span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:{{ c.nameSize }}px;line-height:1.1">{{ c.name }}</span>
+              </div>
+              <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px"><span style="font-family:Huninn;font-size:22px">支持金額</span><span style="font-size:22px;font-weight:700">NT$</span><span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:58px;line-height:1;color:#E8457C">{{ c.priceFmt }}</span></div>
+              <div style="margin-top:12px;padding:10px 16px;border-radius:14px;background:#fff;border:2px solid #363A37;display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:Huninn;font-size:18px;color:#E8457C">參與意義</span>
+                <span style="font-size:20px;line-height:1.5;color:{{ c.meaningColor }}">{{ c.meaning }}</span>
+              </div>
+              <div style="margin-top:auto;padding:12px 16px;border-radius:14px;background:#E69DBA;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:Huninn;font-size:20px;color:#fff">回饋內容</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ c.itemList }}" as="it" hint-placeholder-count="2">
+                    <span style="display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:19px;background:#fff;font-size:20px;font-weight:500">{{ it }}</span>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <sc-for list="{{ merchTiles }}" as="mt" hint-placeholder-count="8">
+                    <span style="width:52px;height:52px;flex:none;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="{{ mt.src }}" alt="{{ mt.alt }}" style="max-width:46px;max-height:46px;object-fit:contain"></span>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ c.stamp }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:36px;top:24px;padding:6px 14px;border:2px solid #C24030;color:#C24030;border-radius:8px;font-family:Huninn;font-size:18px;transform:rotate(-5deg);background:#fff">{{ c.stampText }}</div></sc-if>
+          </div></div></div>
+          </sc-if>
+          </sc-for>
+
+        </div>
+      </div>
+
+      <aside style="flex:1 1 300px;max-width:420px;box-sizing:border-box;position:sticky;top:120px;display:flex;flex-direction:column;gap:14px;padding:18px;border:2px solid #363A37;border-radius:16px;background:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <div style="font-family:Huninn;font-size:18px">編輯 {{ a.code }}</div>
+          <div style="font-size:12px;color:#7A6E72">{{ a.file }}</div>
+        </div>
+        <div style="font-size:12px;line-height:1.6;color:#5E5357;background:#FBF4F1;border-radius:10px;padding:8px 10px">可改文字、價格與背景色，版面位置固定；每欄有字數上限，避免跑版。修改只存在這台電腦的瀏覽器，改完請按下方「匯出 PNG」。</div>
+        <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>商品名稱（上限 {{ lim.name }} 字）</span><input value="{{ a.name }}" onChange="{{ on.name }}" maxLength="{{ lim.name }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%"></label>
+        <sc-if value="{{ notBundle }}" hint-placeholder-val="{{ true }}">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>{{ subLabel }}（上限 {{ lim.sub }} 字）</span><input value="{{ a.sub }}" onChange="{{ on.sub }}" maxLength="{{ lim.sub }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%"></label>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72">類別標籤<input value="{{ a.cat }}" onChange="{{ on.cat }}" maxLength="{{ lim.cat }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;min-width:0"></label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72">售價（NT$）<input value="{{ a.price }}" onChange="{{ on.price }}" maxLength="{{ lim.price }}" inputMode="numeric" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;min-width:0"></label>
+        </div>
+        <sc-if value="{{ isSingle }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>{{ sizeFieldLabel }}</span><input value="{{ a.size }}" onChange="{{ on.size }}" maxLength="{{ lim.size }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;min-width:0"></label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>{{ matFieldLabel }}</span><input value="{{ a.material }}" onChange="{{ on.material }}" maxLength="{{ lim.material }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;min-width:0"></label>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showItems }}" hint-placeholder-val="{{ false }}">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>{{ itemsLabel }}（以、分隔）</span><input value="{{ a.items }}" onChange="{{ on.items }}" maxLength="{{ lim.items }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%"></label>
+        </sc-if>
+        <sc-if value="{{ isC }}" hint-placeholder-val="{{ false }}">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72"><span>參與意義（上限 {{ lim.meaning }} 字）</span><textarea onChange="{{ on.meaning }}" maxLength="{{ lim.meaning }}" rows="3" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%;resize:vertical" value="{{ a.meaning }}"></textarea></label>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:#7A6E72">背景色（主視覺色票）</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ swatches }}" as="sw" hint-placeholder-count="6">
+              <button onClick="{{ sw.pick }}" title="{{ sw.color }}" aria-label="{{ sw.aria }}" style="width:32px;height:32px;border-radius:50%;background:{{ sw.color }};border:{{ sw.border }};cursor:pointer;padding:0"></button>
+            </sc-for>
+          </div>
+        </div>
+        <button onClick="{{ toggleAdv }}" style="align-self:flex-start;font-size:12px;padding:5px 10px;border-radius:8px;border:1.5px dashed #363A37;background:#fff;color:#363A37;cursor:pointer">{{ advLabel }}</button>
+        <sc-if value="{{ advOn }}" hint-placeholder-val="{{ false }}">
+        <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#7A6E72">審稿標記文字<input value="{{ a.stampText }}" onChange="{{ on.stampText }}" maxLength="{{ lim.stampText }}" style="font:15px 'Noto Sans TC',sans-serif;padding:8px 10px;border:2px solid #363A37;border-radius:10px;color:#363A37;box-sizing:border-box;width:100%"></label>
+        <sc-if value="{{ isSingle }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:12px;color:#7A6E72">Mockup 主視角</div>
+            <div style="display:flex;gap:6px">
+              <button onClick="{{ setMain }}" style="flex:1;font-size:13px;padding:7px 8px;border-radius:10px;border:2px solid #363A37;background:{{ viewBtn.mainBg }};color:{{ viewBtn.mainFg }};cursor:pointer">{{ viewBtn.mainLabel }}</button>
+              <button onClick="{{ setAlt }}" style="flex:1;font-size:13px;padding:7px 8px;border-radius:10px;border:2px solid #363A37;background:{{ viewBtn.altBg }};color:{{ viewBtn.altFg }};cursor:pointer">{{ viewBtn.altLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">
+          <label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" checked="{{ a.decor }}" onChange="{{ tg.decor }}">顯示裝飾（彩帶、塑膠椅、角色）</label>
+          <sc-if value="{{ isSingle }}" hint-placeholder-val="{{ true }}"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" checked="{{ a.aux }}" onChange="{{ tg.aux }}">顯示輔助視角</label></sc-if>
+          <label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" checked="{{ a.stamp }}" onChange="{{ tg.stamp }}">顯示審稿標記</label>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:#7A6E72">替換商品圖（僅存於此瀏覽器分頁）</div>
+          <input type="file" accept="image/*" onChange="{{ onFile }}" style="font-size:12px">
+          <sc-if value="{{ a.hasCustom }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearImg }}" style="align-self:flex-start;font-size:12px;padding:5px 10px;border-radius:8px;border:1.5px solid #363A37;background:#fff;cursor:pointer">還原 Mockup</button></sc-if>
+        </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:2px dashed #D9CCD0">
+          <button onClick="{{ export1 }}" style="font-family:Huninn;font-size:15px;padding:10px;border-radius:12px;border:2px solid #363A37;background:#E8457C;color:#fff;cursor:pointer">匯出 PNG 1000 × 563</button>
+          <button onClick="{{ export2 }}" style="font-family:Huninn;font-size:15px;padding:10px;border-radius:12px;border:2px solid #363A37;background:#fff;color:#363A37;cursor:pointer">匯出 PNG 2000 × 1126</button>
+          <button onClick="{{ exportAll }}" style="font-size:13px;padding:8px;border-radius:12px;border:2px dashed #363A37;background:#fff;color:#363A37;cursor:pointer">一次匯出全部 16 張（兩種尺寸，共 32 檔）</button>
+          <button onClick="{{ resetCard }}" style="font-size:12px;padding:6px;border:none;background:none;color:#7A6E72;cursor:pointer;text-decoration:underline">還原此張預設內容</button>
+        </div>
+        <div style="font-size:12px;line-height:1.6;color:#7A6E72">{{ a.note }}</div>
+      </aside>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ tabSystem }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="視覺系統" style="display:flex;flex-direction:column;gap:48px">
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
+        <div style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:44px;line-height:1.15">粉紅辦桌菜單 × 可愛商品型錄</div>
+        <div style="font-size:16px;line-height:1.8">每張商品圖都在同一張「辦桌」上：背景沿用主視覺的同心圓作為底盤，標準字作為識別標籤，商品放在畫面左側最大的位置，右側依三層字體排出名稱、價格與規格。單品之間只換底色與 Mockup，資訊格式不變。</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:Huninn;font-size:22px">色彩</div>
+        <div style="font-size:13px;color:#7A6E72">由原始素材取色（標準字、方巾 PDF、背景.jpg、紅色塑膠椅、原子筆圖檔）。印刷 CMYK 值仍以 Illustrator 原稿為準。</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
+          <sc-for list="{{ palette }}" as="p" hint-placeholder-count="9">
+            <div style="display:flex;flex-direction:column;border:2px solid #363A37;border-radius:14px;overflow:hidden;background:#fff">
+              <div style="height:78px;background:{{ p.hex }}"></div>
+              <div style="padding:10px 12px;display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:Huninn;font-size:15px">{{ p.name }}</span>
+                <span style="font-size:12px;font-weight:700">{{ p.hex }}</span>
+                <span style="font-size:11px;color:#7A6E72;line-height:1.5">{{ p.src }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:Huninn;font-size:22px">字體層級（1000 × 563 畫布）</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+          <div style="border:2px solid #363A37;border-radius:16px;background:#fff;padding:20px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:#7A6E72">第一層｜饅頭黑體 Mantou Sans・OFL 1.1</span>
+            <span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:56px;line-height:1.1">阿巾老師</span>
+            <span style="font-family:'Mantou Sans','Noto Sans TC',sans-serif;font-size:40px;line-height:1.1;color:#E8457C">NT$ 1,950</span>
+            <span style="font-size:13px;line-height:1.7">商品名稱 52–66 px、組合名稱 62 px、價格數字 84 px。只用於名稱與價格。</span>
+          </div>
+          <div style="border:2px solid #363A37;border-radius:16px;background:#fff;padding:20px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:#7A6E72">第二層｜jf open 粉圓 Huninn・OFL 1.1</span>
+            <span style="font-family:Huninn;font-size:34px;line-height:1.3;color:#E8457C">人權辦桌紀念方巾</span>
+            <span style="font-family:Huninn;font-size:22px;line-height:1.3">尺寸・規格・組合內容</span>
+            <span style="font-size:13px;line-height:1.7">副標 28 px、類別標籤 20 px、規格欄名 22 px。</span>
+          </div>
+          <div style="border:2px solid #363A37;border-radius:16px;background:#fff;padding:20px;display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:12px;color:#7A6E72">第三層｜思源黑體 TC（以 Noto Sans TC 載入，同一字形設計）</span>
+            <span style="font-size:26px;font-weight:700">NT$</span>
+            <span style="font-size:22px;font-weight:500">待確認・50 × 50 cm</span>
+            <span style="font-size:15px;font-weight:400">註記、版本標記與較長的說明文字。</span>
+            <span style="font-size:13px;line-height:1.7">Regular / Medium / Bold，最小 22 px。</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:Huninn;font-size:22px">標準字與裝飾素材（原圖使用，不重新打字）</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+          <sc-for list="{{ assets }}" as="as" hint-placeholder-count="12">
+            <div style="border:2px solid #363A37;border-radius:14px;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+              <div style="height:130px;background:{{ as.bg }};display:flex;align-items:center;justify-content:center;padding:14px"><img src="{{ as.src }}" alt="{{ as.name }}" style="max-width:100%;max-height:100%;object-fit:contain"></div>
+              <div style="padding:10px 12px;display:flex;flex-direction:column;gap:2px;border-top:2px solid #363A37">
+                <span style="font-size:13px;font-weight:700">{{ as.name }}</span>
+                <span style="font-size:12px;color:#7A6E72;line-height:1.5">{{ as.use }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-family:Huninn;font-size:22px">版型結構</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="position:relative;aspect-ratio:1000/563;border:2px solid #363A37;border-radius:6px;background:#F1CAC3;overflow:hidden">
+              <div style="position:absolute;left:4.8%;top:7.8%;width:51%;bottom:7.8%;border:2px dashed #363A37;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;text-align:center;background:rgba(255,255,255,.5)">A 區 商品展示 58%<br>Mockup＋輔助視角</div>
+              <div style="position:absolute;left:59.2%;top:7.8%;right:5.2%;bottom:7.8%;display:flex;flex-direction:column;gap:6px;font-size:11px">
+                <div style="background:#E8457C;color:#fff;padding:3px 6px;border-radius:4px;align-self:flex-start">標準字</div>
+                <div style="background:#fff;border:1.5px solid #363A37;padding:2px 6px;border-radius:10px;align-self:flex-start">類別</div>
+                <div style="background:#363A37;color:#fff;padding:6px;border-radius:4px">商品名稱｜饅頭</div>
+                <div style="background:#fff;padding:4px 6px;border-radius:4px">副標｜粉圓</div>
+                <div style="margin-top:auto;background:#fff;padding:4px 6px;border-radius:4px">尺寸・規格｜思源</div>
+                <div style="background:#E8457C;color:#fff;padding:6px;border-radius:4px">價格｜饅頭</div>
+              </div>
+            </div>
+            <div style="font-size:14px;line-height:1.7"><b>版型 A｜單品</b>：安全邊界左右 48–52 px、上下 44 px。最多一位角色陪襯，預設只用彩帶與塑膠椅。</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="position:relative;aspect-ratio:1000/563;border:2px solid #363A37;border-radius:6px;background:#ECC2D1;overflow:hidden">
+              <div style="position:absolute;left:5.2%;top:7%;width:40%;height:24%;background:#363A37;color:#fff;border-radius:4px;font-size:12px;display:flex;align-items:center;padding:0 8px">組合名稱</div>
+              <div style="position:absolute;right:5.2%;top:6%;width:20%;aspect-ratio:1;border-radius:50%;background:#fff;border:2px solid #363A37;font-size:12px;display:flex;align-items:center;justify-content:center">價格</div>
+              <div style="position:absolute;left:-10%;right:-10%;top:58%;bottom:-20%;border-radius:50% 50% 0 0;background:#E84078"></div>
+              <div style="position:absolute;left:30%;top:24%;width:44%;height:52%;border:2px dashed #363A37;border-radius:8px;background:rgba(255,255,255,.5);font-size:12px;display:flex;align-items:center;justify-content:center">商品上桌</div>
+              <div style="position:absolute;left:5.2%;bottom:6%;right:5.2%;height:8%;display:flex;gap:6px"><span style="background:#fff;border-radius:10px;flex:1"></span><span style="background:#fff;border-radius:10px;flex:1"></span><span style="background:#fff;border-radius:10px;flex:1"></span></div>
+            </div>
+            <div style="font-size:14px;line-height:1.7"><b>版型 B｜組合</b>：正面餐桌插畫作為桌面，商品像上菜一樣站在桌上，價格放在右上的「盤子」，下方列出組合內容。</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="position:relative;aspect-ratio:1000/563;border:2px solid #363A37;border-radius:6px;background:#FAF1F3;overflow:hidden">
+              <div style="position:absolute;left:5.2%;top:8%;width:36%;bottom:8%;border:2px dashed #363A37;border-radius:50% 50% 8px 8px;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff">聯名書封<br>（拱形底）</div>
+              <div style="position:absolute;left:46%;top:8%;right:5.2%;height:20%;background:#363A37;color:#fff;border-radius:4px;font-size:12px;display:flex;align-items:center;padding:0 8px">方案名稱＋支持金額</div>
+              <div style="position:absolute;left:46%;top:33%;right:5.2%;height:26%;background:#fff;border-radius:4px;font-size:12px;padding:6px 8px">參與意義（團隊撰寫）</div>
+              <div style="position:absolute;left:46%;top:64%;right:5.2%;bottom:8%;background:#E69DBA;border-radius:4px;font-size:12px;padding:6px 8px">回饋內容＋所有募資品</div>
+            </div>
+            <div style="font-size:14px;line-height:1.7"><b>版型 C｜聯名／特別支持（方向）</b>：3,000／5,000 元方案以聯名作者的書封為主角，放在粉色拱形上，底色收斂成淡粉白，減少裝飾，讓書、參與意義與回饋內容並重。參與意義由團隊撰寫後填入。</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:820px">
+        <div style="font-family:Huninn;font-size:22px">使用原則</div>
+        <div style="font-size:15px;line-height:1.9">
+          商品圖案一律使用原稿圖檔，不重繪、不改字。Mockup 以半立體方式呈現：柔和投影、輕微布紋，不做擬真攝影棚。底色依商品調整（方巾淡粉、毛巾粉白襯黑、原子筆乾淨淺色、組合加入餐桌），名稱、價格、規格的位置與字級不變。全部角色（含自拍生哥、Y2K陳文成系列）皆可使用，每張單品圖最多一位。
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ tabMock }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="商品 Mockup" style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+        <sc-for list="{{ mkTabs }}" as="m" hint-placeholder-count="3">
+          <button onClick="{{ m.go }}" style="font-family:Huninn;font-size:16px;padding:8px 18px;border-radius:999px;border:2px solid #363A37;background:{{ m.bg }};color:{{ m.fg }};cursor:pointer">{{ m.label }}</button>
+        </sc-for>
+        <label style="margin-left:auto;display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ mkCheck }}" onChange="{{ toggleMkBg }}">顯示透明底（棋盤格）</label>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:20px">
+        <sc-for list="{{ mkViews }}" as="v" hint-placeholder-count="2">
+          <div style="flex:1 1 500px;min-width:0;border:2px solid #363A37;border-radius:16px;overflow:hidden;background:#fff;display:flex;flex-direction:column">
+            <div style="padding:36px 20px;display:flex;align-items:center;justify-content:center;min-height:320px;background:{{ mkStage }};background-size:20px 20px;overflow:auto">
+              <div id="{{ v.id }}" style="display:inline-block"><dc-import name="Mockup" kind="{{ v.kind }}" hint-size="440px,300px"></dc-import></div>
+            </div>
+            <div style="padding:14px 16px;border-top:2px solid #363A37;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1">
+                <span style="font-family:Huninn;font-size:17px">{{ v.title }}</span>
+                <span style="font-size:12px;color:#7A6E72;line-height:1.5">{{ v.note }}</span>
+              </div>
+              <span style="font-size:12px;padding:3px 10px;border-radius:999px;background:#FFF0D6;border:1px solid #E2B867">03｜Mockup 示意</span>
+              <button onClick="{{ v.export }}" style="font-size:13px;padding:7px 12px;border-radius:10px;border:2px solid #363A37;background:#E8457C;color:#fff;cursor:pointer">匯出透明 PNG（長邊 {{ v.px }} px）</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:14px;line-height:1.8;max-width:860px;color:#4E4548">{{ mkNote }}</div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ tabReview }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="審稿狀態" style="display:flex;flex-direction:column;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:Huninn;font-size:22px">交付項目與審稿狀態</div>
+        <div style="font-size:13px;color:#7A6E72">狀態可由統籌調整並保存於此瀏覽器；「04 設計已確認」「05 可進入正式輸出」請在團隊確認後再切換。</div>
+        <div style="border:2px solid #363A37;border-radius:14px;overflow:hidden;background:#fff">
+          <sc-for list="{{ deliverables }}" as="d" hint-placeholder-count="12">
+            <div style="display:grid;grid-template-columns:70px minmax(0,1fr) 220px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid #EADDE1">
+              <span style="font-weight:700;font-size:14px">{{ d.id }}</span>
+              <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:15px">{{ d.name }}</span><span style="font-size:12px;color:#7A6E72">{{ d.where }}</span></div>
+              <select key="{{ d.status }}" defaultValue="{{ d.status }}" onChange="{{ d.set }}" style="font:13px 'Noto Sans TC',sans-serif;padding:6px 8px;border-radius:8px;border:2px solid #363A37;background:{{ d.bg }}">
+                <sc-for list="{{ d.opts }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.label }}</option></sc-for>
+              </select>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:Huninn;font-size:22px">待確認清單</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ pending }}" as="p" hint-placeholder-count="8">
+            <div style="display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;padding:10px 14px;border-radius:12px;background:#fff;border:1.5px solid #E3D3D8">
+              <span style="font-family:Huninn;font-size:14px;color:#E8457C">{{ p.k }}</span>
+              <span style="font-size:14px;line-height:1.7">{{ p.v }}</span>
+            </div>
+          </sc-for>
+          <sc-for list="{{ resolved }}" as="p" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:100px minmax(0,1fr);gap:12px;padding:10px 14px;border-radius:12px;background:#EEF6EE;border:1.5px solid #B9D8BC">
+              <span style="font-family:Huninn;font-size:14px;color:#3F7F48">已確認｜{{ p.k }}</span>
+              <span style="font-size:14px;line-height:1.7">{{ p.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:Huninn;font-size:22px">約 15 張正式商品圖規劃（依報價表）</div>
+        <div style="border:2px solid #363A37;border-radius:14px;overflow:auto;background:#fff">
+          <div style="min-width:760px">
+            <div style="display:grid;grid-template-columns:40px 1.2fr 1.6fr 100px 80px 1.4fr;gap:10px;padding:10px 14px;font-size:12px;color:#7A6E72;border-bottom:2px solid #363A37"><span>#</span><span>名稱</span><span>內容</span><span>版型</span><span>售價</span><span>目前狀態</span></div>
+            <sc-for list="{{ plan }}" as="r" hint-placeholder-count="15">
+              <div style="display:grid;grid-template-columns:40px 1.2fr 1.6fr 100px 80px 1.4fr;gap:10px;padding:9px 14px;font-size:13px;border-bottom:1px solid #EADDE1"><span>{{ r.n }}</span><span style="font-weight:500">{{ r.name }}</span><span>{{ r.what }}</span><span>{{ r.tpl }}</span><span>{{ r.price }}</span><span style="color:#6E6266">{{ r.state }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-size:14px;line-height:1.8;max-width:860px">目前 15 張商品介紹圖皆已有版型：單品 6 張（電子謝卡除外）、組合 3 張、聯名／特別支持 6 張。仍待補：電子謝卡素材、明信片、透明貼紙、NT$ 999 組合名稱、NT$ 5,000 方案名稱與同桌共食形式、各聯名方案的參與意義文案與書籍回饋形式、徽章是否為新提供的圓形標誌。原子筆與轉印貼以組合內容出現，不另出單品圖。</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:Huninn;font-size:22px">素材盤點</div>
+        <div style="font-size:13px;color:#7A6E72">完整清單另存為 07_Review_Tracking/Asset_Inventory.csv。.ai 原稿無法匯入本環境；不在此宣稱已檢視未開啟的檔案。</div>
+        <div style="border:2px solid #363A37;border-radius:14px;overflow:auto;background:#fff;max-height:560px">
+          <div style="min-width:900px">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1.6fr 1fr 1.3fr 1.3fr;gap:10px;padding:10px 14px;font-size:12px;color:#7A6E72;border-bottom:2px solid #363A37;position:sticky;top:0;background:#fff"><span>檔名</span><span>類別</span><span>讀取</span><span>可編輯原稿</span><span>本次使用</span><span>需補充</span></div>
+            <sc-for list="{{ inventory }}" as="r" hint-placeholder-count="10">
+              <div style="display:grid;grid-template-columns:2fr 1fr 1.6fr 1fr 1.3fr 1.3fr;gap:10px;padding:8px 14px;font-size:12px;line-height:1.5;border-bottom:1px solid #EADDE1"><span style="font-weight:500;word-break:break-all">{{ r.f }}</span><span>{{ r.c }}</span><span style="color:{{ r.rc }}">{{ r.r }}</span><span>{{ r.e }}</span><span>{{ r.u }}</span><span>{{ r.n }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const KEY = 'hrpt26-review-v6';
+const DEFAULTS = {
+  D01: { code: 'A01', file: 'HRPT26_A01_Bandana_V01', cat: '方巾', name: '阿巾老師', sub: '人權辦桌紀念方巾', price: '400', sizeLabel: '尺寸', size: '50 × 50 cm', material: '', matLabel: '', bg: '#F1CAC3', decor: true, aux: true, stamp: false, stampText: '審稿示意', view: 'main', status: '02｜商品資料待確認', note: '方巾圖樣改用最新「方巾- 人權辦桌.pdf」整張輸出（含外圈台羅拼音）。尺寸依〈示意圖文字說明與進度〉；材質欄已依指示移除。副標為示意文案。' },
+  D02: { code: 'A02', file: 'HRPT26_A02_Towel_V01', cat: '毛巾', name: '時代又看顧正義的人', sub: '人權辦桌紀念毛巾', price: '400', sizeLabel: '尺寸', size: '100 × 33 cm', material: '', matLabel: '', bg: '#F6DDE6', decor: true, aux: true, stamp: false, stampText: '審稿示意', view: 'main', status: '02｜商品資料待確認', note: '毛巾圖樣改用最新「毛巾.pdf」（1600 px 寬輸出），摺疊視角已把標準字與台羅拼音置中。販售名稱依報價表；圖樣字樣維持原樣。' },
+  D03: { code: 'A03', file: 'HRPT26_A03_Pen_Draft_V01', cat: '原子筆（一組）', name: '大三原', sub: '人權辦桌原子筆', price: '100', sizeLabel: '筆款', size: 'Pentel 0.7 mm 自動原子筆', material: '藍、黑、紅', matLabel: '墨色', bg: '#FAF1F3', decor: true, aux: true, stamp: false, stampText: '審稿示意｜是否單獨販售待確認', view: 'main', status: '03｜Mockup 示意', note: '改用廠商示意圖 BX417 三色筆（印刷 W44 × H5 mm）。報價表備註原子筆「僅組合販售」，此張仍只作版型測試。' },
+  D04: { code: 'B01', file: 'HRPT26_B01_Bundle_Draft_V01', cat: '組合方案', name: '襪！大三原', price: '519', items: '飄帶、襪子、三原', bg: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '審稿示意', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '組合名稱、內容、價格依報價表。襪子改用側面成對示意圖；飛行飄帶、原子筆改用最新示意圖；「三原」即原子筆「大三原」。' },
+  D05: { code: 'A04', file: 'HRPT26_A04_Tshirt_V01', cat: 'T-shirt', name: '辦桌衣衣', sub: '綠款', price: '600', sizeLabel: '尺寸', size: 'S–2XL', material: '', matLabel: '', bg: '#FAF1F3', decor: true, aux: true, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '改用「T_Shirt_2模擬-人權辦桌.pdf」綠款正面／背面，只販售綠款。尺寸表依〈示意圖文字說明與進度〉，取 S–2XL 五個尺碼（建議體重未列入以免跑版）。' },
+  D06: { code: 'A05', file: 'HRPT26_A05_Socks_V01', cat: '襪子', name: '襪！人權之路', sub: '人權辦桌中筒襪', price: '250', sizeLabel: '規格', size: '144 針薄平面中統襪', material: '', matLabel: '', bg: '#F6DDE6', decor: true, aux: true, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '改由「中筒襪-人權辦桌.ai」重新輸出側面圖，修正先前偏紫的顏色；製作註記已去除。規格依〈示意圖文字說明與進度〉，設計仍在確認中。' },
+  D07: { code: 'A06', file: 'HRPT26_A06_Streamer_Draft_V01', cat: '飛行飄帶', name: '一眼就是好夥「辦」', sub: '人權辦桌飛行飄帶', price: '200', sizeLabel: '尺寸', size: '3 × 14 cm', material: '', matLabel: '', bg: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '改用最新飄帶示意圖（正面「人生而自由且平等」、背面「人權辦桌」，含銀色鑰匙圈），依去年樣式橫放，顏色依原稿。' },
+  D10: { code: 'A07', file: 'HRPT26_A07_ECard_V01', cat: '電子謝卡', name: '純粹相挺', sub: '人權辦桌電子謝卡', price: '100', sizeLabel: '形式', size: '電子謝卡', material: '', matLabel: '', bg: '#F6DDE6', decor: true, aux: false, stamp: false, stampText: '審稿示意', view: 'main', status: '03｜Mockup 示意', note: '方案名稱「純粹相挺（電子謝卡）」，只放在募資網頁。謝卡畫面為設計示意（標準字、自拍生哥與炒菜學長、感謝文字），尺寸比照其他商品介紹圖 1000 × 563。' },
+  D08: { code: 'B02', file: 'HRPT26_B02_Bundle_Draft_V01', cat: '組合方案', name: '從頭辦到腳', price: '1950', items: '全部都要大禮包、10週年徽章、明信片', bg: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜大禮包內容、明信片待提供', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '組合名稱、價格依報價表。徽章改為 10 週年蛋糕徽章；畫面以 T-shirt 綠款、方巾、襪子、毛巾、原子筆代表大禮包，明信片仍為占位框。' },
+  D09: { code: 'B03', file: 'HRPT26_B03_Bundle_Draft_V01', cat: '組合方案', name: '組合名稱待定', price: '999', items: '毛巾、飄帶、轉印貼組、方巾、透明貼紙', bg: '#F6DDE6', decor: true, aux: false, stamp: false, stampText: '版型示意｜組合名稱、透明貼紙待提供', view: 'main', sub: '', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '內容與價格依報價表，組合名稱未定。轉印貼（10 × 6.8 cm）、飄帶、毛巾、方巾皆改用最新圖檔；透明貼紙無素材，畫面不放圖，只列在組合內容。' },
+  C01: { code: 'C01', file: 'HRPT26_C01_Awu_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '利格拉樂・阿𡠄 × 人權辦桌', subImg: 'assets/name_awu.webp', subImgAlt: '利格拉樂・阿𡠄', subRest: '× 人權辦桌', price: '3000', items: '《隱隱微光》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_awu.webp', bookAlt: '《隱隱微光》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：阿鄔＋所有募資品＊1。書封為新提供的《隱隱微光》（利格拉樂・阿𡠄著）。書是否為回饋品（如簽名書）待確認；參與意義由團隊撰寫。' },
+  C02: { code: 'C02', file: 'HRPT26_C02_Wanyao_Draft_V01', cat: '特別支持方案', name: '補課潮聯名組合', sub: '周婉窈 × 人權辦桌', price: '3000', items: '《少年臺灣史》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_wanyao.webp', bookAlt: '《少年臺灣史》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：婉窈＋所有募資品＊1。書封為新提供的《少年臺灣史》（2019 增訂版，周婉窈著）。書是否為回饋品待確認。' },
+  C03: { code: 'C03', file: 'HRPT26_C03_ChenLie_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳列 × 人權辦桌', price: '3000', items: '《殘骸書》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenlie.webp', bookAlt: '《殘骸書》書封', bg: '#FAF1F3', arch: '#E69DBA', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳列＋所有募資品＊1。書封為新提供的《殘骸書》（陳列著）。白色書封放在深一階的粉色拱形上以保持輪廓。' },
+  C04: { code: 'C04', file: 'HRPT26_C04_ChenQinsheng_Draft_V01', cat: '特別支持方案', name: '長輩聯名組合', sub: '陳欽生 × 人權辦桌', price: '3000', items: '《謊言真相》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_chenqinsheng.webp', bookAlt: '《謊言 真相：陳欽生生命故事》書封', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：陳欽生＋所有募資品＊1。書封為新提供的《謊言 真相：陳欽生生命故事》。' },
+  C05: { code: 'C05', file: 'HRPT26_C05_HuangKexian_Draft_V01', cat: '特別支持方案', name: '看見街頭的暗組合', sub: '黃克先 × 人權辦桌', price: '3000', items: '《危殆生活》、全套募資品 ×1', meaning: '（待團隊撰寫）', book: 'assets/book_huang.webp', bookAlt: '《危殆生活》書封', bg: '#FAF1F3', arch: '#F1CAC3', decor: true, aux: false, stamp: false, stampText: '版型示意｜書籍回饋形式、參與意義待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：黃克先＋所有募資品＊1。書封為新提供的《危殆生活》（黃克先著）。' },
+  C06: { code: 'C06', file: 'HRPT26_C06_Table_Draft_V01', cat: '特別支持方案', name: '方案名稱待定', sub: '同桌共食', price: '5000', items: '同桌共食、全套募資品 ×1', meaning: '（待團隊撰寫）', book: '', bookAlt: '', bg: '#FAF1F3', arch: '#ECC2D1', decor: true, aux: false, stamp: false, stampText: '版型示意｜方案名稱、同桌共食形式待確認', view: 'main', size: '', material: '', matLabel: '', status: '02｜商品資料待確認', note: '報價表：（未命名）同桌共食＋所有募資品＊1，NT$ 5,000。無人物或書籍，左側以辦桌餐桌示意。' }
+};
+const TEE_SIZES = [
+  { s: 'S', a: 67, b: 48, c: 43, d: 19, h: '160–165' },
+  { s: 'M', a: 70, b: 51, c: 44, d: 20, h: '165–170' },
+  { s: 'L', a: 72, b: 53, c: 46, d: 21, h: '170–175' },
+  { s: 'XL', a: 74, b: 56, c: 48, d: 22, h: '175–180' },
+  { s: '2XL', a: 76, b: 59, c: 50, d: 23, h: '180–185' }
+];
+const MERCH_TILES = [
+  { src: 'assets/tee_front.webp', alt: 'T-shirt' }, { src: 'assets/bandana_v2.webp', alt: '方巾' }, { src: 'assets/towel_v2.webp', alt: '毛巾' },
+  { src: 'assets/socks_pair_v2.webp', alt: '襪子' }, { src: 'assets/pens_trio_v2.webp', alt: '原子筆' }, { src: 'assets/streamer_pair_v2.webp', alt: '飛行飄帶' },
+  { src: 'assets/sticker_v2.webp', alt: '轉印貼' }, { src: 'assets/badge10.webp', alt: '10 週年徽章' }
+];
+const SWATCHES = ['#F1CAC3', '#F6DDE6', '#FAF1F3', '#ECC2D1', '#E69DBA', '#FFFFFF'];
+const PALETTE = [
+  { name: '主粉紅', hex: '#E8457C', src: '人權辦桌粉_扭曲.png、正面餐桌.png' },
+  { name: '方巾深粉', hex: '#D6608A', src: '方巾 PDF 圖層' },
+  { name: '淺粉紅', hex: '#E69DBA', src: '方巾 PDF、背景.jpg' },
+  { name: '淡粉色', hex: '#ECC2D1', src: '背景.jpg 內圈' },
+  { name: '粉膚底', hex: '#F1CAC3', src: '委託書參考色' },
+  { name: '深灰黑', hex: '#363A37', src: '人權辦桌灰.png' },
+  { name: '磚紅', hex: '#C24030', src: '紅色塑膠椅.png' },
+  { name: '深藍', hex: '#405889', src: '自拍生哥.png 帽子' },
+  { name: '草綠', hex: '#75BF76', src: '原子筆圖檔.png' }
+];
+const ASSETS = [
+  { name: '人權辦桌粉_扭曲.png', src: 'assets/t/logo_pink_warp.webp', use: '商品圖右上識別標籤', bg: '#fff' },
+  { name: '人權辦桌灰.png', src: 'assets/t/logo_gray.webp', use: '淺色底上的識別', bg: '#fff' },
+  { name: '台羅粉.png', src: 'assets/t/tailo_pink.webp', use: '裝飾標準字', bg: '#fff' },
+  { name: '台羅灰.png', src: 'assets/t/tailo_gray.webp', use: '裝飾標準字', bg: '#fff' },
+  { name: '背景.jpg', src: 'assets/png/bg.webp', use: '商品底盤（圓形裁切）', bg: '#fff' },
+  { name: '彩帶.png', src: 'assets/t/ribbon.webp', use: '畫面上緣點綴', bg: '#F1CAC3' },
+  { name: '正面餐桌.png', src: 'assets/t/front_table.webp', use: '組合圖桌面', bg: '#fff' },
+  { name: '辦桌餐桌.png', src: 'assets/t/banquet_table.webp', use: '組合圖備用桌面', bg: '#fff' },
+  { name: '半張餐桌.png', src: 'assets/t/half_table.webp', use: '角落裝飾', bg: '#fff' },
+  { name: '紅色塑膠椅1・2.png', src: 'assets/t/chair1.webp', use: '單品圖角落', bg: '#fff' },
+  { name: '四張紅色塑膠椅.png', src: 'assets/t/chairs4.webp', use: '寬幅裝飾', bg: '#fff' },
+  { name: '炒菜學長.png', src: 'assets/t/chef.webp', use: '組合圖陪襯角色', bg: '#fff' },
+  { name: '用餐小女孩.png', src: 'assets/t/girl.webp', use: '可用陪襯角色', bg: '#fff' },
+  { name: '夾菜女人.png', src: 'assets/t/woman.webp', use: '可用陪襯角色', bg: '#fff' },
+  { name: '總舖師蒸籠.png', src: 'assets/t/steamer.webp', use: '場景裝飾', bg: '#fff' },
+  { name: '廚房用具.png', src: 'assets/t/kitchen.webp', use: '場景裝飾', bg: '#fff' },
+  { name: '自拍生哥.png', src: 'assets/t/selfie.webp', use: '可用陪襯角色（已確認）', bg: '#F4EEF0' },
+  { name: 'Y2K文成.png', src: 'assets/t/y2k_wencheng.webp', use: '可用陪襯角色（已確認）', bg: '#F4EEF0' }
+];
+const DELIV = [
+  ['A', '視覺系統總覽', '「視覺系統」分頁', '01'], ['B1', '單品商品圖版型（A）', 'D01–D03 共用', '01'], ['B2', '組合販售圖版型（B）', 'D04', '01'],
+  ['C1', '方巾 Mockup（攤平／摺疊）', '「商品 Mockup」分頁', '03'], ['C2', '毛巾 Mockup（攤平／摺疊）', '「商品 Mockup」分頁', '03'], ['C3', '原子筆 Mockup（整體／細節）', '「商品 Mockup」分頁', '03'],
+  ['D01', '阿巾老師－方巾單品圖', 'HRPT26_A01_Bandana_V01', '02'], ['D02', '毛巾單品圖', 'HRPT26_A02_Towel_V01', '02'], ['D03', '原子筆單品圖（審稿示意）', 'HRPT26_A03_Pen_Draft_V01', '02'], ['D04', '組合販售示意圖（襪！大三原）', 'HRPT26_B01_Bundle_Draft_V01', '02'],
+  ['C4', 'T-shirt Mockup（粉衣／綠衣）', '「商品 Mockup」分頁', '03'], ['C5', '襪子 Mockup（成對／單隻）', '「商品 Mockup」分頁', '03'], ['C6', '轉印貼整張 Mockup', '「商品 Mockup」分頁', '03'],
+  ['D05', '辦桌衣衣－T-shirt 單品圖', 'HRPT26_A04_Tshirt_V01', '03'], ['D06', '襪！人權之路－襪子單品圖', 'HRPT26_A05_Socks_V01', '03'], ['D07', '飛行飄帶單品圖', 'HRPT26_A06_Streamer_Draft_V01', '03'],
+  ['D10', '純粹相挺－電子謝卡單品圖', 'HRPT26_A07_ECard_V01', '03'],
+  ['D08', '組合販售示意圖（從頭辦到腳）', 'HRPT26_B02_Bundle_Draft_V01', '02'], ['D09', '組合販售示意圖（NT$ 999，名稱待定）', 'HRPT26_B03_Bundle_Draft_V01', '02'],
+  ['C7', '飛行飄帶 Mockup（兩面／單面）', '「商品 Mockup」分頁', '03'], ['B3', '聯名／特別支持版型（C）', 'C01–C06 共用', '01'],
+  ['C01', '阿𡠄聯名（補課潮聯名組合）', 'HRPT26_C01_Awu_Draft_V01', '02'], ['C02', '婉窈聯名（補課潮聯名組合）', 'HRPT26_C02_Wanyao_Draft_V01', '02'], ['C03', '陳列聯名（長輩聯名組合）', 'HRPT26_C03_ChenLie_Draft_V01', '02'],
+  ['C04', '陳欽生聯名（長輩聯名組合）', 'HRPT26_C04_ChenQinsheng_Draft_V01', '02'], ['C05', '黃克先聯名（看見街頭的暗組合）', 'HRPT26_C05_HuangKexian_Draft_V01', '02'], ['C06', '同桌共食方案（NT$ 5,000）', 'HRPT26_C06_Table_Draft_V01', '02'],
+  ['E', '互動設計預覽頁', '本頁', '01'], ['F', '資料盤點及待確認清單', '本分頁＋CSV／MD', '01'], ['G', '可編輯工作檔', '本專案（Design Component）', '01']
+];
+const ST_BG = { '01': '#FFF7E6', '02': '#FDEBEF', '03': '#FFF0D6', '04': '#E6F4E6', '05': '#D9F0DA' };
+const MK = {
+  bandana: { views: [
+    { kind: 'bandana-flat', title: '方巾｜攤平（主視角）', note: '來源：方巾- 人權辦桌.pdf 整張輸出。加入輕微布紋與縫邊示意。', w: 440 },
+    { kind: 'bandana-folded', title: '方巾｜摺疊（第二視角）', note: '四邊向下摺入，露出中央標準字；疊層呈現布料厚度。', w: 300 }],
+    note: '尺寸 50 × 50 cm。圖樣改用最新 PDF 整張輸出，未經重繪。' },
+  towel: { views: [
+    { kind: 'towel-flat', title: '毛巾｜攤平（主視角）', note: '來源：毛巾.pdf。毛圈質感以紋理疊加，上下加織邊示意。', w: 600 },
+    { kind: 'towel-folded', title: '毛巾｜摺疊（第二視角）', note: '上下緣向後摺，標準字與台羅拼音置中，不扭曲文字。', w: 460 }],
+    note: '尺寸 100 × 33 cm。圖樣改用最新毛巾 PDF，解析度已足夠 2000 px 輸出。' },
+  pen: { views: [
+    { kind: 'pens-trio', title: '原子筆｜三色（主視角）', note: '來源：廠商示意圖 BX417 黑／紅／藍墨水，印刷 W44 × H5 mm。已去除型號文字。', w: 640 },
+    { kind: 'pen-detail', title: '原子筆｜印刷局部（第二視角）', note: '黑色筆桿放大，檢查「人權辦桌」與台羅拼音印刷。', w: 520 }],
+    note: 'Pentel 0.7 mm 自動原子筆，藍、黑、紅三色（依〈示意圖文字說明與進度〉）。' },
+  tee: { views: [
+    { kind: 'tee-green', title: 'T-shirt 綠款｜正面（主視角）', note: '來源：T_Shirt_2模擬-人權辦桌.pdf 正面。', w: 440 },
+    { kind: 'tee-back', title: 'T-shirt 綠款｜背面（第二視角）', note: '來源：同一份 PDF 背面（魚形「人權辦桌」）。', w: 440 }],
+    note: '只販售綠款；尺寸 S–2XL，尺寸表見商品介紹圖 A04。' },
+  socks: { views: [
+    { kind: 'socks-pair', title: '襪子｜成對側面（主視角）', note: '由「中筒襪-人權辦桌.ai」重新輸出，修正偏紫的顏色；已去除製作註記。', w: 520 },
+    { kind: 'sock-single', title: '襪子｜單隻（第二視角）', note: '同一來源裁出左腳。', w: 260 }],
+    note: '144 針薄平面中統襪，設計尚在確認中。' },
+  sticker: { views: [
+    { kind: 'sticker-sheet', title: '轉印貼｜整張', note: '來源：轉印貼-人權辦桌.pdf 重新輸出（修正先前的偏色）。', w: 320 }],
+    note: '尺寸 10 × 6.8 cm。' },
+  streamer: { views: [
+    { kind: 'streamer-pair', title: '飛行飄帶｜正面＋背面（主視角）', note: '來源：最新飄帶示意圖（含銀色鑰匙圈），依去年樣式橫放。', w: 520 },
+    { kind: 'streamer-single', title: '飛行飄帶｜背面（第二視角）', note: '「人權辦桌」角色面單條。', w: 520 }],
+    note: '尺寸 3 × 14 cm。' }
+};
+function fmt(p) { const n = String(p || '').replace(/[^\d]/g, ''); return n ? Number(n).toLocaleString('en-US') : String(p || ''); }
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    const cards = {};
+    Object.keys(DEFAULTS).forEach(k => { cards[k] = Object.assign({}, DEFAULTS[k], (saved.cards || {})[k] || {}, { img: null }); });
+    this.state = { tab: saved.tab || 'cards', active: saved.active || 'D01', all: false, mobile: false, cards, colW: 900, fonts: {}, busy: '', err: '', mk: 'bandana', mkCheck: false, adv: false, statuses: saved.statuses || {}, data: null };
+    this.colRef = React.createRef();
+    this.glyph = {};
+  }
+  componentDidMount() {
+    this.onResize = () => this.measure();
+    window.addEventListener('resize', this.onResize);
+    setTimeout(this.onResize, 50);
+    this.checkFonts();
+    import(new URL('review-data.js', location.href).href).then(m => this.setState({ data: m })).catch(e => this.setState({ err: '資料載入失敗' }));
+  }
+  measure() { const el = this.colRef.current; if (el && el.clientWidth && Math.abs(el.clientWidth - this.state.colW) > 4) this.setState({ colW: el.clientWidth }); }
+  componentDidUpdate() {
+    if (this._lastTab !== this.state.tab) { this._lastTab = this.state.tab; setTimeout(this.onResize, 50); }
+    const cards = {};
+    Object.keys(this.state.cards).forEach(k => { const c = Object.assign({}, this.state.cards[k]); delete c.img; cards[k] = c; });
+    try { localStorage.setItem(KEY, JSON.stringify({ cards, tab: this.state.tab, active: this.state.active, statuses: this.state.statuses })); } catch (e) {}
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  async toDataURL(url) {
+    this.fontCache = this.fontCache || {};
+    if (!this.fontCache[url]) this.fontCache[url] = fetch(url).then(r => r.blob()).then(b => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); }));
+    return this.fontCache[url];
+  }
+  async fontCSS(text) {
+    // 專案內字體檔（使用者提供）：饅頭黑體、jf open 粉圓 2.1、思源黑體 TC 可變字重
+    const u = f => new URL('fonts/' + f, location.href).href;
+    const [mt, hn, nt] = await Promise.all([
+      this.toDataURL(u('MantouSans-Regular.woff2')),
+      this.toDataURL(u('jf-openhuninn-2.1.woff2')),
+      this.toDataURL(u('NotoSansTC-VariableFont_wght.woff2'))]);
+    return [
+      "@font-face{font-family:'Mantou Sans';src:url(" + mt + ") format('woff2');font-weight:400;}",
+      "@font-face{font-family:'Huninn';src:url(" + hn + ") format('woff2');font-weight:400;}",
+      "@font-face{font-family:'Noto Sans TC';src:url(" + nt + ") format('woff2');font-weight:400 700;}"
+    ].join('\n');
+  }
+  async checkFonts() {
+    for (let i = 0; i < 20; i++) {
+      await this.checkFontsOnce();
+      const f = this.state.fonts;
+      if (f.mantou && f.huninn && f.noto) return;
+      await new Promise(r => setTimeout(r, 600));
+    }
+  }
+  async checkFontsOnce() {
+    try {
+      const r = await Promise.all([
+        document.fonts.load('64px "Mantou Sans"', '人權辦桌'),
+        document.fonts.load('28px "Huninn"', '人權辦桌'),
+        document.fonts.load('22px "Noto Sans TC"', '人權辦桌')]);
+      await document.fonts.ready;
+      this.setState({ fonts: { done: true, mantou: r[0].length > 0, huninn: r[1].length > 0, noto: r[2].length > 0 } });
+    } catch (e) { this.setState({ fonts: { done: true } }); }
+  }
+  missingGlyphs(texts) {
+    if (!this.state.fonts.mantou) return null;
+    if (!this.cv) this.cv = document.createElement('canvas').getContext('2d');
+    const out = [];
+    texts.join('').split('').forEach(ch => {
+      if (/[\s\x00-\x7F]/.test(ch) || out.includes(ch)) return;
+      if (!(ch in this.glyph)) {
+        this.cv.font = '40px "Mantou Sans", serif'; const a = this.cv.measureText(ch).width;
+        this.cv.font = '40px "Mantou Sans", monospace'; const b = this.cv.measureText(ch).width;
+        this.glyph[ch] = Math.abs(a - b) > 0.5;
+      }
+      if (this.glyph[ch]) out.push(ch);
+    });
+    return out;
+  }
+  upd(id, patch) { this.setState(s => ({ cards: Object.assign({}, s.cards, { [id]: Object.assign({}, s.cards[id], patch) }) })); }
+  async exportNode(id, ratio, filename, opts) {
+    const h2i = window.htmlToImage;
+    if (!h2i) { this.setState({ err: '匯出元件尚未載入，請稍後再試' }); return; }
+    if (!this.state.fonts.mantou) { this.setState({ err: '字體尚未載入完成，暫停匯出' }); return; }
+    const node = document.getElementById(id);
+    if (!node) return;
+    this.setState({ busy: filename, err: '' });
+    try {
+      await document.fonts.ready;
+      const fontEmbedCSS = await this.fontCSS(node.innerText || '');
+      const url = await h2i.toPng(node, Object.assign({ pixelRatio: ratio, cacheBust: true, fontEmbedCSS }, opts || {}));
+      const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) { this.setState({ err: '匯出失敗：' + (e && e.message ? e.message : e) }); }
+    this.setState({ busy: '' });
+  }
+  cardView(c) {
+    const len = (c.name || '').length;
+    return Object.assign({}, c, {
+      priceFmt: fmt(c.price),
+      nameSize: /^C/.test(c.code) ? (len > 7 ? 46 : 52) : /^B/.test(c.code) ? (len > 7 ? 52 : 62) : (len <= 4 ? 66 : len <= 6 ? 58 : 52),
+      priceSize: fmt(c.price).length > 4 ? 40 : 58,
+      hasCustom: !!c.img, noCustom: !c.img, isMain: c.view !== 'alt', isAlt: c.view === 'alt',
+      sizeColor: /待/.test(c.size || '') ? '#8C7D82' : '#363A37',
+      matColor: /待/.test(c.material || '') ? '#8C7D82' : '#363A37',
+      meaningColor: /待/.test(c.meaning || '') ? '#8C7D82' : '#363A37',
+      sizeLabel: c.sizeLabel || '尺寸', hasMat: !!(c.material && c.matLabel),
+      hasBook: !!c.book, noBook: !c.book,
+      hasSubImg: !!c.subImg && c.sub === (DEFAULTS[Object.keys(DEFAULTS).find(k => DEFAULTS[k].code === c.code)] || {}).sub, noSubImg: !(c.subImg && c.sub === (DEFAULTS[Object.keys(DEFAULTS).find(k => DEFAULTS[k].code === c.code)] || {}).sub),
+      itemList: String(c.items || '').split(/[、,，＋+]/).map(x => x.trim()).filter(Boolean)
+    });
+  }
+  renderVals() {
+    const S = this.state, cards = S.cards, act = S.active, a = this.cardView(cards[act]);
+    const ink = (on) => ({ bg: on ? '#363A37' : '#fff', fg: on ? '#fff' : '#363A37' });
+    const tabs = [['cards', '商品介紹圖'], ['system', '視覺系統'], ['mock', '商品 Mockup'], ['review', '審稿狀態・盤點']].map(([k, l]) => Object.assign({ label: l, go: () => this.setState({ tab: k }) }, ink(S.tab === k)));
+    const colW = S.colW || 900;
+    let s = S.mobile ? 0.343 : S.all ? Math.min(0.62, (colW - 20) / 2 / 1000) : Math.min(1, colW / 1000);
+    const sc = { s, w: Math.round(1000 * s), h: Math.round(563 * s) };
+    const show = {}; Object.keys(cards).forEach(k => { show[k] = S.all || act === k; });
+    const field = f => e => this.upd(act, { [f]: e.target.value });
+    const tog = f => () => this.upd(act, { [f]: !cards[act][f] });
+    const miss = this.missingGlyphs(Object.values(cards).map(c => c.name + (c.cat || '')));
+    const f = S.fonts;
+    const fs = (ok) => !f.done ? '載入中' : ok ? '已載入' : '未載入';
+    const fb = (ok) => !f.done ? '#B0A3A7' : ok ? '#4E9A57' : '#C24030';
+    const labels = { D03: ['整體', '局部細節'], D05: ['正面', '背面'], D06: ['成對側面', '單隻'], D07: ['兩面', '單面'], D10: ['信封＋謝卡', '謝卡'] }[act] || ['攤平', '摺疊'];
+    const bundle = /^B/.test(cards[act].code), isC = /^C/.test(cards[act].code);
+    const mk = MK[S.mk];
+    const data = S.data || {};
+    return {
+      tabs, tabCards: S.tab === 'cards', tabSystem: S.tab === 'system', tabMock: S.tab === 'mock', tabReview: S.tab === 'review',
+      fontChip: { mantou: fs(f.mantou), huninn: fs(f.huninn), noto: fs(f.noto), mantouBg: fb(f.mantou), huninnBg: fb(f.huninn), notoBg: fb(f.noto) },
+      missingText: miss === null ? '等待字體' : miss.length ? '缺 ' + miss.join('、') + '（已以思源黑體替代，需人工確認）' : '目前名稱皆可顯示',
+      busy: S.busy, busyOn: !!S.busy, err: S.err, errOn: !!S.err,
+      colRef: this.colRef,
+      cardTabs: Object.keys(cards).map(k => Object.assign({ code: cards[k].code, name: cards[k].name, status: cards[k].status, go: () => this.setState({ active: k, all: false }) }, ink(act === k && !S.all))),
+      toggleAll: () => this.setState({ all: !S.all, mobile: false }), toggleMobile: () => this.setState({ mobile: !S.mobile, all: false }),
+      allBtn: ink(S.all), mobBtn: ink(S.mobile), mobileOn: S.mobile,
+      sc, show,
+      d01: this.cardView(cards.D01), d02: this.cardView(cards.D02), d03: this.cardView(cards.D03), d04: this.cardView(cards.D04),
+      cList: Object.keys(cards).filter(k => /^C/.test(k)).map(k => Object.assign(this.cardView(cards[k]), { show: show[k], domId: 'card-' + k })),
+      itemsLabel: isC ? '回饋內容' : '組合內容',
+      teeSizes: TEE_SIZES, merchTiles: MERCH_TILES,
+      d05: this.cardView(cards.D05), d06: this.cardView(cards.D06), d07: this.cardView(cards.D07), d10: this.cardView(cards.D10), d08: this.cardView(cards.D08), d09: this.cardView(cards.D09),
+      advOn: S.adv, advLabel: S.adv ? '收起進階設定' : '進階設定（設計者用：視角、裝飾、審稿標記、替換圖片）', toggleAdv: () => this.setState({ adv: !S.adv }),
+      lim: { name: isC ? 9 : 9, sub: isC ? 16 : 12, cat: 8, price: 5, size: 20, material: 12, items: isC ? 20 : 28, meaning: 60, stampText: 24 },
+      subLabel: isC ? '聯名標籤' : '副標',
+      sizeFieldLabel: cards[act].sizeLabel || '尺寸',
+      matFieldLabel: (cards[act].matLabel || '第二行規格') + '（可留空）',
+      a, isBundle: bundle, notBundle: !bundle, isC: isC, isSingle: !bundle && !isC, showItems: bundle || isC,
+      on: { name: field('name'), sub: field('sub'), cat: field('cat'), price: field('price'), size: field('size'), material: field('material'), items: field('items'), meaning: field('meaning'), stampText: field('stampText') },
+      tg: { decor: tog('decor'), aux: tog('aux'), stamp: tog('stamp') },
+      swatches: SWATCHES.map(c => ({ color: c, aria: '背景色 ' + c, border: cards[act].bg === c ? '3px solid #E8457C' : '2px solid #363A37', pick: () => this.upd(act, { bg: c }) })),
+      viewBtn: { mainLabel: labels[0], altLabel: labels[1], mainBg: a.isMain ? '#363A37' : '#fff', mainFg: a.isMain ? '#fff' : '#363A37', altBg: a.isAlt ? '#363A37' : '#fff', altFg: a.isAlt ? '#fff' : '#363A37' },
+      setMain: () => this.upd(act, { view: 'main' }), setAlt: () => this.upd(act, { view: 'alt' }),
+      onFile: e => { const file = e.target.files && e.target.files[0]; if (file) this.upd(act, { img: URL.createObjectURL(file) }); },
+      clearImg: () => this.upd(act, { img: null }),
+      export1: () => this.exportNode('card-' + act, 1, cards[act].file + '.png', { width: 1000, height: 563 }),
+      export2: () => this.exportNode('card-' + act, 2, cards[act].file + '_2000x1126.png', { width: 1000, height: 563 }),
+      exportAll: async () => {
+        this.setState({ all: true, mobile: false });
+        await new Promise(r => setTimeout(r, 800));
+        for (const k of Object.keys(cards)) {
+          await this.exportNode('card-' + k, 1, cards[k].file + '.png', { width: 1000, height: 563 });
+          await this.exportNode('card-' + k, 2, cards[k].file + '_2000x1126.png', { width: 1000, height: 563 });
+        }
+      },
+      resetCard: () => this.upd(act, Object.assign({}, DEFAULTS[act], { img: null })),
+      palette: PALETTE, assets: ASSETS,
+      mkTabs: [['bandana', '方巾'], ['towel', '毛巾'], ['pen', '原子筆'], ['tee', 'T-shirt'], ['socks', '襪子'], ['sticker', '轉印貼'], ['streamer', '飛行飄帶']].map(([k, l]) => Object.assign({ label: l, go: () => this.setState({ mk: k }) }, ink(S.mk === k))),
+      mkCheck: S.mkCheck, toggleMkBg: () => this.setState({ mkCheck: !S.mkCheck }),
+      mkStage: S.mkCheck ? 'repeating-conic-gradient(#EEE6E9 0% 25%, #fff 0% 50%)' : '#F4ECEF',
+      mkNote: mk.note,
+      mkViews: mk.views.map(v => { const r = Math.ceil(1800 / v.w); return Object.assign({}, v, { id: 'mk-' + v.kind, px: v.w * r, export: () => this.exportNode('mk-' + v.kind, r, 'HRPT26_Mockup_' + v.kind + '_V01.png') }); }),
+      deliverables: DELIV.map(([id, name, where, st]) => { const cur = S.statuses[id] || st; return { id, name, where, status: cur, bg: ST_BG[cur], opts: [['01', '設計待確認'], ['02', '商品資料待確認'], ['03', 'Mockup 示意'], ['04', '設計已確認'], ['05', '可進入正式輸出']].map(([v, l]) => ({ v, label: v + '｜' + l })), set: e => this.setState(s2 => ({ statuses: Object.assign({}, s2.statuses, { [id]: e.target.value }) })) }; }),
+      pending: (data.PENDING || []).map(([k, v]) => ({ k, v })),
+      resolved: (data.RESOLVED || []).map(([k, v]) => ({ k, v })),
+      plan: (data.PLAN || []).map(([n, name, what, tpl, price, state]) => ({ n, name, what, tpl, price: fmt(price), state })),
+      inventory: (data.INVENTORY || []).map(([f2, c, r, e, u, n]) => ({ f: f2, c, r, e, u, n, rc: /無法|未/.test(r) ? '#C24030' : /部分/.test(r) ? '#B07A1E' : '#3F7F48' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
